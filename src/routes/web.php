@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\ManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +19,10 @@ use App\Http\Controllers\StaffController;
 //     return view('welcome');
 // });
 
-Route::get('/', [StaffController::class, 'index']);
+Route::get('/admin/login', [ManagerController::class, 'adminLogin']);
+Route::get('/attendance', [StaffController::class, 'attendanceView']);
+Route::get('/attendance/list', [StaffController::class, 'attendanceListView']);
+Route::get('/stamp_correction_request/list', [StaffController::class, 'requestView']);
+// Route::get('/attendance/{id}')
+
+Route::get('/admin/attendance/list',[ManagerController::class,'attendanceList']);
