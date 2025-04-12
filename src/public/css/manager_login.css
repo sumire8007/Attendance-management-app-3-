@@ -1,0 +1,33 @@
+header {
+    background-color: black;
+}
+img {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+}
+.login-form__content {
+    margin: 0 auto;
+    width: 500px;
+    text-align: center;
+}
+.form__group-title {
+    text-align: left;
+    font-weight: bold;
+}
+.form__input--text input {
+    width: 500px;
+    height: 35px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+.form__button-submit {
+    width: 500px;
+    height: 35px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 45px;
+}
