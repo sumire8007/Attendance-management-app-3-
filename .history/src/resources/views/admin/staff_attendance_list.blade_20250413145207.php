@@ -4,5 +4,4 @@
 @endsection
 
 @section('content')
-
 @endsection

@@ -3,6 +3,4 @@
 <link rel="stylesheet" href="{{ asset('css/staff_attendance_list.css') }}">
 @endsection
 
-@section('content')
-
-@endsection
+@section

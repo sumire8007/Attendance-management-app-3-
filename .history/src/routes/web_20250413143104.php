@@ -27,4 +27,4 @@ Route::get('/attendance/id', [StaffController::class, 'attendanceDetail']);
 
 Route::get('/admin/attendance/list',[AdminController::class,'attendanceList']);
 Route::get('/admin/staff/list', [AdminController::class, 'staffList']);
-Route::get('/admin/attendance/staff/id', [AdminController::class, 'staffAttendanceList']);
+Route::get('/admin/attendance/staff/id', [AdminController::class, 'staffListDetail']);

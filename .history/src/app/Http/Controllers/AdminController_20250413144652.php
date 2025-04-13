@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ManagerController extends Controller
+class AdminController extends Controller
 {
     //管理者ログイン画面表示
     public function adminLogin()
@@ -12,7 +12,7 @@ class ManagerController extends Controller
         return view('auth.admin_login');
     }
 
-    //勤怠一覧画面表示
+    //当日の勤怠一覧画面表示
     public function attendanceList()
     {
         return view('admin.admin_attendance_list');
@@ -27,6 +27,7 @@ class ManagerController extends Controller
     {
         return view('admin.staff_list');
     }
+    
     //申請一覧表示
     public function requestList()
     {
