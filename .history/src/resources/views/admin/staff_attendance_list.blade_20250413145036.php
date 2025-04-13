@@ -1,3 +1,0 @@
-@extends('layouts.admin_default')
-@secction('css')
-@end
