@@ -22,7 +22,7 @@
                     <a class="header-nav__link-attendance-list" href="/admin/staff/list">スタッフ一覧</a>
                 </ol>
                 <ol>
-                    <a class="header-nav__link-request" href="/stamp_correction_request/list">申請一覧</a>
+                    <a class="header-nav__link-request" href="/admin/stamp_correction_request/list">申請一覧</a>
                 </ol>
                 <ol class="header-nav__item-logout">
                     @if (Auth::check())

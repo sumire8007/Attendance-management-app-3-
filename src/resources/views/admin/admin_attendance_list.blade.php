@@ -23,7 +23,7 @@
                 <td>18:00</td>
                 <td>1:00</td>
                 <td>8:00</td>
-                <td>詳細</td>
+                <td><a href="/admin/attendance/id">詳細</a></td>
             </tr>
             <tr>
                 <td>西伶奈</td>
@@ -31,7 +31,7 @@
                 <td>18:00</td>
                 <td>1:00</td>
                 <td>8:00</td>
-                <td>詳細</td>
+                <td><a href="/admin/attendance/id">詳細</a></td>
             </tr>
         </table>
     </div>

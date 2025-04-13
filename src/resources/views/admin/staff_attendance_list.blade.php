@@ -27,7 +27,7 @@
                 <td>8:00</td> <!--勤務時間の合計-->
                 <!-- <form action=""> -->
                 <td>
-                    <a href="admin/attendance/id">詳細</a>
+                    <a href="/admin/attendance/id">詳細</a>
                 </td>
                 <!-- </form> -->
             </tr>
@@ -39,7 +39,7 @@
                 <td>8:00</td>
                 <!-- <form action=""> -->
                 <td>
-                    <a href="admin/attendance/id">詳細</a>
+                    <a href="/admin/attendance/id">詳細</a>
                 </td>
                 <!-- </form> -->
             </tr>
