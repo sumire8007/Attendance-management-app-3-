@@ -5,11 +5,15 @@
 @endsection
 
 @section('content')
-<div>
-    <div>勤務外</div>
-    <div>2023年6月1日(木)</div>
-    <div>現在の時刻</div>
-</div>
-    <button>出勤</button>
-
+    <div class="attendance_group">
+        <div>
+            <div>勤務外</div>
+            <div>2023年6月1日(木)</div>
+            <div>現在の時刻</div>
+            <form action="" method="post">
+                @csrf
+                <button>出勤</button>←退勤、休憩入り(戻り)に変化
+            </form>
+        </div>
+    </div>
 @endsection

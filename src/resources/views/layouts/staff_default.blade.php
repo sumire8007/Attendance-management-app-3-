@@ -12,7 +12,7 @@
 
 <body>
     <header>
-        <a class="header_logo" href="/"><img src="{{ asset('../../img/logo.png') }}" alt="coachtech"></a>
+        <a class="header_logo" href="/attendance"><img src="{{ asset('../../img/logo.png') }}" alt="coachtech"></a>
         <div class="header-content">
             <ul class="header-nav">
                 <ol>

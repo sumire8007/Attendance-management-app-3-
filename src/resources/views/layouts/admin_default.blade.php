@@ -12,14 +12,14 @@
 
 <body>
     <header>
-        <a class="header_logo" href="/"><img src="{{ asset('../../img/logo.png') }}" alt="coachtech"></a>
+        <a class="header_logo" href="/admin/attendance/list"><img src="{{ asset('../../img/logo.png') }}" alt="coachtech"></a>
         <div class="header-content">
             <ul class="header-nav">
                 <ol>
-                    <a class="header-nav__link-attendance" href="/attendance">勤怠一覧</a>
+                    <a class="header-nav__link-attendance" href="/admin/attendance/list">勤怠一覧</a>
                 </ol>
                 <ol>
-                    <a class="header-nav__link-attendance-list" href="/attendance/list">スタッフ一覧</a>
+                    <a class="header-nav__link-attendance-list" href="/admin/staff/list">スタッフ一覧</a>
                 </ol>
                 <ol>
                     <a class="header-nav__link-request" href="/stamp_correction_request/list">申請一覧</a>

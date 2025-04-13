@@ -22,7 +22,7 @@ use App\Http\Controllers\ManagerController;
 Route::get('/admin/login', [ManagerController::class, 'adminLogin']);
 Route::get('/attendance', [StaffController::class, 'attendanceView']);
 Route::get('/attendance/list', [StaffController::class, 'attendanceListView']);
-Route::get('/stamp_correction_request/list', [StaffController::class, 'requestView']);
-// Route::get('/attendance/{id}')
+Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
+Route::get('/attendance/id', [StaffController::class, 'attendanceDetail']);
 
 Route::get('/admin/attendance/list',[ManagerController::class,'attendanceList']);

@@ -17,7 +17,7 @@ class StaffController extends Controller
     }
     //申請一覧の表示
     public function requestListView(){
-        return view('staff.request_list');
+        return view('staff.request');
     }
     //勤怠詳細(申請入力)
     public function attendanceDetail(){
