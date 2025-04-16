@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AdminController;
@@ -18,6 +18,8 @@ use App\Http\Controllers\AdminController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);
 
 Route::get('/admin/login', [AdminController::class, 'adminLogin']);
 Route::get('/attendance', [StaffController::class, 'attendanceView']);

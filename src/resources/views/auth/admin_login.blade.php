@@ -20,7 +20,7 @@
                 <h2>管理者ログイン</h2>
             </div>
             <div class="login-form__input">
-                <form class="form" action="admin/login" method="post">
+                <form class="form" action="/admin/login" method="post">
                     @csrf
                     <!-- メールアドレスのフォーム -->
                     <div class="form__group">
