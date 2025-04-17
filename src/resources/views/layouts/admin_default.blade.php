@@ -25,13 +25,13 @@
                     <a class="header-nav__link-request" href="/admin/stamp_correction_request/list">申請一覧</a>
                 </ol>
                 <ol class="header-nav__item-logout">
-                    @if (Auth::check())
-                        <form action="/logout" method="post">
+                    @if (Auth::guard('manager')->check())
+                        <form action="/admin/logout" method="post">
                             @csrf
                             <button>ログアウト</button>
                         </form>
                     @else
-                        <form action="/login" method="get">
+                        <form action="/admin/login" method="get">
                             @csrf
                             <button>ログイン</button>
                         </form>

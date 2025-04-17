@@ -22,4 +22,17 @@ class AuthenticatedSessionController extends FortifyAuthenticatedSessionControll
             }
         }
     }
+    public function logout(Request $request){
+        if($request->is('admin/logout')){
+            Auth::guard('manager')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/admin/login');
+        }else{
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/login');
+        }
+    }
 }

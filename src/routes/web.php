@@ -20,6 +20,9 @@ use App\Http\Controllers\AdminController;
 // });
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);
+Route::post('/admin/logout', [AuthenticatedSessionController::class, 'logout']);
+
 
 Route::get('/admin/login', [AdminController::class, 'adminLogin']);
 Route::get('/attendance', [StaffController::class, 'attendanceView']);
