@@ -6,12 +6,6 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    // 管理者ログイン画面表示
-    public function adminLogin()
-    {
-        return view('auth.admin_login');
-    }
-
     //当日の勤怠一覧画面表示
     public function attendanceList()
     {

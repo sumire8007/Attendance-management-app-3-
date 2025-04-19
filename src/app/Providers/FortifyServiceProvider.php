@@ -31,11 +31,13 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // 会員登録
         Fortify::createUsersUsing(CreateNewUser::class);
-
+        //　会員登録画面の表示
         Fortify::registerView(function () {
             return view('auth.staff_register');
         });
+        // ログイン画面の表示
         Fortify::loginView(function () {
             return request()->is('admin/*')
             ? view('auth.admin_login')
@@ -46,21 +48,22 @@ class FortifyServiceProvider extends ServiceProvider
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());
         });
-        Fortify::authenticateUsing(function ($request) {
-                if (request()->is('admin/*')) {
-                    $manager = \App\Models\Manager::where('email', $request->email)->first();
-                    if ($manager && Hash::check($request->password, $manager->password)) {
-                        Auth::guard('manager')->login($manager);
-                        return $manager;
-                    }
-                } else {
-                    $user = \App\Models\User::where('email', $request->email)->first();
-                    if ($user && Hash::check($request->password, $user->password)) {
-                        Auth::guard('web')->login($user);
-                        return $user;
-                    }
-                }
-            });
+        // Fortify::authenticateUsing(function ($request) {
+        //         if (request()->is('admin/*')) {
+        //             $admin = \App\Models\Admin::where('email', $request->email)->first();
+        //             if ($admin && Hash::check($request->password, $admin->password)) {
+        //                 Auth::guard('admin')->login($admin);
+        //                 return $admin;
+        //             }
+        //         } else {
+        //             $user = \App\Models\User::where('email', $request->email)->first();
+        //             if ($user && Hash::check($request->password, $user->password)) {
+        //                 Auth::guard('web')->login($user);
+        //                 return $user;
+        //             }
+        //         }
+        //     });
+        
         // Fortify::redirects([
         //     'login' => function () {
         //         return request()->is('admin/*') ? '/admin/attendance/list' : '/attendance';

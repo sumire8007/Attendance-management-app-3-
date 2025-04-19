@@ -15,16 +15,18 @@ use App\Http\Controllers\AdminController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+
+// ログイン処理
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);
+// ログアウト処理
 Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);
 Route::post('/admin/logout', [AuthenticatedSessionController::class, 'logout']);
 
 
-Route::get('/admin/login', [AdminController::class, 'adminLogin']);
+
+
+// ログイン後の画面表示
 Route::get('/attendance', [StaffController::class, 'attendanceView']);
 Route::get('/attendance/list', [StaffController::class, 'attendanceListView']);
 Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
