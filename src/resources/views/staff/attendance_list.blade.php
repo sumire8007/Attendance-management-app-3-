@@ -10,7 +10,7 @@
         </div>
         <div class="attendance_day">
             <span><p>←前月</p></span>
-            <p>📅2023/6/1</p>
+            <p>📅2023/6</p>
             <span><p>翌月→</p></span>
         </div>
 

@@ -31,7 +31,7 @@
                             <button>ログアウト</button>
                         </form>
                     @else
-                        <form action="/admin/login" method="get">
+                        <form action="/admin/login" method="post">
                             @csrf
                             <button>ログイン</button>
                         </form>
