@@ -2,6 +2,7 @@ body{
     background-color: #F0EFF2;
 }
 header {
+    /* position: fixed; */
     background-color: black;
     width: 100%;
     display: flex;
