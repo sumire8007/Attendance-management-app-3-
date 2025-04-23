@@ -1,6 +1,6 @@
 @extends('layouts.admin_default')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/request_list.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_request_list.css') }}">
 @endsection
 
 @section('content')

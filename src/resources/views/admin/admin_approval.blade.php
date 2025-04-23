@@ -1,6 +1,6 @@
 @extends('layouts.admin_default')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/approval.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_approval.css') }}">
 @endsection
 
 @section('content')

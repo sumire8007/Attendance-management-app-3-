@@ -19,22 +19,22 @@ class AdminController extends Controller
     //スタッフ一覧表示
     public function staffList()
     {
-        return view('admin.staff_list');
+        return view('admin.admin_staff_list');
     }
     //スタッフ別勤怠月次一覧
     public function staffAttendanceList()
     {
-        return view('admin.staff_attendance_list');
+        return view('admin.admin_staff_attendance_list');
     }
     //申請一覧表示
     public function requestList()
     {
-        return view('admin.request_list');
+        return view('admin.admin_request_list');
     }
     //修正承認画面表示
     public function approval()
     {
-        return view('admin.approval');
+        return view('admin.admin_approval');
     }
 
 }
