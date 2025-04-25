@@ -15,6 +15,9 @@ class CreateAttendanceBreakApplicationsTable extends Migration
     {
         Schema::create('attendance_break_applications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('attendance_application_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('break_application_id')->constrained()->cascadeOnDelete();
+            $table->timestamp('approval_at');
             $table->timestamps();
         });
     }

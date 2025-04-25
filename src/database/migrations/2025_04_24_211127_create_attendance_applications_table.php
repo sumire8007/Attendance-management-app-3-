@@ -15,6 +15,11 @@ class CreateAttendanceApplicationsTable extends Migration
     {
         Schema::create('attendance_applications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
+            $table->time('clock_in_change');
+            $table->time('clock_out_change');
+            $table->string('remark_change');
+            $table->integer('attendance_total');
             $table->timestamps();
         });
     }
