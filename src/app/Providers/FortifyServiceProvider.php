@@ -39,7 +39,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
         // ログイン画面の表示
         Fortify::loginView(function () {
-            return request()->is('admin/*')
+            return request()->is('/admin/login')
             ? view('auth.admin_login')
             :view('auth.staff_login');
         });
