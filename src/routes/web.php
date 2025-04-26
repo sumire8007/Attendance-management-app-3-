@@ -14,7 +14,10 @@ use App\Http\Controllers\AdminController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// ログイン画面表示
+Route::get('/admin/login', function () {
+    return view('auth.admin_login');
+});
 
 // ログイン処理
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);

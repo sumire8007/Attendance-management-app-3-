@@ -39,15 +39,14 @@ class FortifyServiceProvider extends ServiceProvider
         });
         // ログイン画面の表示
         Fortify::loginView(function () {
-            return request()->is('/admin/login')
-            ? view('auth.admin_login')
-            :view('auth.staff_login');
+            return view('auth.staff_login');
         });
 
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());
         });
+
         // Fortify::authenticateUsing(function ($request) {
         //         if (request()->is('admin/*')) {
         //             $admin = \App\Models\Admin::where('email', $request->email)->first();
@@ -63,7 +62,7 @@ class FortifyServiceProvider extends ServiceProvider
         //             }
         //         }
         //     });
-        
+
         // Fortify::redirects([
         //     'login' => function () {
         //         return request()->is('admin/*') ? '/admin/attendance/list' : '/attendance';

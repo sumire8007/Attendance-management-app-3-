@@ -25,7 +25,7 @@
                     <a class="header-nav__link-request" href="/stamp_correction_request/list">申請</a>
                 </ol>
                 <ol class="header-nav__item-logout">
-                    @if (Auth::guard('web')->check())
+                    @if (Auth::check())
                         <form action="/logout" method="post">
                             @csrf
                             <button>ログアウト</button>
