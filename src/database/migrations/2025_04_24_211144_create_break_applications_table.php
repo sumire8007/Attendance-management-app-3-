@@ -16,9 +16,9 @@ class CreateBreakApplicationsTable extends Migration
         Schema::create('break_applications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('break_id');
-            $table->time('break_in_change');
-            $table->time('break_out_change');
-            $table->integer('break_total');
+            $table->time('break_in_change_at');
+            $table->time('break_out_change_at');
+            $table->integer('break_change_total')->nullable();
             $table->timestamps();
         });
     }

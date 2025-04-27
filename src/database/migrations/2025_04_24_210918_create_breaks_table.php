@@ -16,10 +16,10 @@ class CreateBreaksTable extends Migration
         Schema::create('breaks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->date('day');
-            $table->time('break_in');
-            $table->time('break_out');
-            $table->integer('break_total');
+            $table->date('break_date');
+            $table->time('break_in_at')->nullable();
+            $table->time('break_out_at')->nullable();
+            $table->integer('break_total')->nullable();
             $table->timestamps();
         });
     }
