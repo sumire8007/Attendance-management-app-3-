@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -19,7 +20,8 @@ class AdminController extends Controller
     //スタッフ一覧表示
     public function staffList()
     {
-        return view('admin.admin_staff_list');
+        $users = User::where('role',0)->get();
+        return view('admin.admin_staff_list',compact('users'));
     }
     //スタッフ別勤怠月次一覧
     public function staffAttendanceList()

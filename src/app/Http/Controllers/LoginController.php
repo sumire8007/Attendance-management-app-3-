@@ -16,7 +16,10 @@ use Laravel\Fortify\Contracts\LoginViewResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
-use Laravel\Fortify\Http\Requests\LoginRequest;
+// use Laravel\Fortify\Http\Requests\LoginRequest;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
+
 
 class LoginController extends Controller
 {
@@ -58,6 +61,10 @@ class LoginController extends Controller
     // ログイン処理
     public function store(LoginRequest $request)
     {
+        $creadentials = $request->only(["email", "password"]);
+        if (!Auth::attempt($creadentials)) {
+            return back()->withErrors(["email" => "ログイン情報が登録されていません"])->withInput();
+        }
         return $this->loginPipeline($request)->then(function ($request) {
             return app(LoginResponse::class);
         });
@@ -101,12 +108,10 @@ class LoginController extends Controller
     public function destroy(Request $request): LogoutResponse
     {
         $this->guard->logout();
-        
         if ($request->hasSession()) {
             $request->session()->invalidate();
             $request->session()->regenerateToken();
         }
-
         return app(LogoutResponse::class);
     }
 }

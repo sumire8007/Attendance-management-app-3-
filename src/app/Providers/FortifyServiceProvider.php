@@ -14,17 +14,38 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
-use App\Http\Responses\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    // ログアウト後のリダイレクト先
     public function register(): void
     {
+        //ログイン後のリダイレクト先
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                $user = Auth::user();
+                if ($request->is('admin/login')) {
+                    if (Gate::allows('admin-higher', $user)) {
+                        $request->session()->regenerate();
+                        return redirect('/admin/attendance/list');
+                    }
+                } elseif ($request->is('login')) {
+                    if (Gate::allows('user-higher', $user)) {
+                        $request->session()->regenerate();
+                        return redirect('/attendance');
+                    }
+                }
+            }
+        });
+        // ログアウト後のリダイレクト先
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
             public function toResponse($request)
             {
@@ -42,7 +63,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         // 会員登録
         Fortify::createUsersUsing(CreateNewUser::class);
         //　会員登録画面の表示

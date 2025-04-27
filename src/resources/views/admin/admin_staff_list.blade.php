@@ -16,22 +16,14 @@
                     <th>メールアドレス</th>
                     <th>月次勤怠</th>
                 </tr>
-                <tr>
-                    <td>西伶奈</td>
-                    <td>reina.n@coachtech.com</td>
-                    <td><a href="/admin/attendance/staff/id">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>山田太郎</td>
-                    <td>taro.y@coachtech.com</td>
-                    <td><a href="/admin/attendance/staff/id">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>増田一世</td>
-                    <td>issei.m@coachtech.com</td>
-                    <td><a href="/admin/attendance/staff/id">詳細</a></td>
-                </tr>
 
+                @foreach ($users as $user )
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td><a href="/admin/attendance/staff/id">詳細</a></td>
+                </tr>
+                @endforeach
             </table>
         </div>
     </div>
