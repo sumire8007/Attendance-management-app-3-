@@ -18,17 +18,19 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Http\Requests\LoginRequest;
+// use App\Http\Requests\LoginRequest;
+use Laravel\Fortify\Http\Requests\LoginRequest;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 
 class AuthenticatedSessionController extends FortifyAuthenticatedSessionController
 {
-    // ログイン処理(formRequestでバリデーション)
-    public function store(Request $request){
-        $credentials = $request->only('email', 'password');
-        $user_role = User::where('email', $request->email)->pluck('role');
-        // dd($request);
-        if(Auth::attempt($credentials)){
+    // ログイン処理
+    public function store(LoginRequest $request){
+        $credentials = User::where('email', $request->email)->first();
+        // $credentials = $request->only('email', 'password');
+        if ($credentials && Hash::check($request->password, $credentials->password)) {
+            Auth::guard()->login($credentials);
             $user = Auth::user();
             if ($request->is('admin/login')) {
                 if (Gate::allows('admin-higher', $user)) {
@@ -41,23 +43,22 @@ class AuthenticatedSessionController extends FortifyAuthenticatedSessionControll
                     return redirect('/attendance');
                 }
             }
-
         }
     }
-
-
     // ログアウト処理
     public function logout(Request $request){
-        if($request->is('/admin/logout')){
+        if($request->is('admin/logout')){
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             return redirect('/admin/login');
-        }else{
+        }elseif($request->is('logout')){
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             return redirect('/login');
         }
     }
+
+
 }

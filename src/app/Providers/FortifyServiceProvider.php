@@ -13,17 +13,28 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use App\Http\Responses\LoginResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
+    // ログアウト後のリダイレクト先
     public function register(): void
     {
-        //
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+            public function toResponse($request)
+            {
+                if($request->is('admin/logout')){
+                    return redirect('admin/login');
+                }else{
+                    return redirect('/login');
+                }
+            }
+        });
     }
 
     /**
@@ -31,6 +42,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->app->singleton(LoginResponseContract::class, LoginResponse::class);
         // 会員登録
         Fortify::createUsersUsing(CreateNewUser::class);
         //　会員登録画面の表示
@@ -41,33 +53,39 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(function () {
             return view('auth.staff_login');
         });
-
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());
         });
-
+        // ログイン処理
         // Fortify::authenticateUsing(function ($request) {
-        //         if (request()->is('admin/*')) {
-        //             $admin = \App\Models\Admin::where('email', $request->email)->first();
-        //             if ($admin && Hash::check($request->password, $admin->password)) {
-        //                 Auth::guard('admin')->login($admin);
-        //                 return $admin;
+        //             $credentials = \App\Models\User::where('email', $request->email)->first();
+        //             if ($credentials && Hash::check($request->password, $credentials->password)) {
+        //                 Auth::guard()->login($credentials);
+        //                 return $credentials;
         //             }
-        //         } else {
-        //             $user = \App\Models\User::where('email', $request->email)->first();
-        //             if ($user && Hash::check($request->password, $user->password)) {
-        //                 Auth::guard('web')->login($user);
-        //                 return $user;
+        //         $user = Auth::user();
+        //         if ($request->is('admin/login')) {
+        //             if (Gate::allows('admin-higher', $user)) {
+        //                 $request->session()->regenerate();
+        //                 return redirect('/admin/attendance/list');
+        //             }
+        //         } elseif ($request->is('login')) {
+        //             if (Gate::allows('user-higher', $user)) {
+        //                 $request->session()->regenerate();
+        //                 return redirect('/attendance');
         //             }
         //         }
         //     });
 
-        // Fortify::redirects([
+        // Fortify::redirects(
         //     'login' => function () {
+        //         if(){
+
+        //         }
         //         return request()->is('admin/*') ? '/admin/attendance/list' : '/attendance';
         //     },
-        // ]);
+        // );
 
     }
 }

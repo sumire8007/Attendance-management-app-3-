@@ -3,6 +3,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +21,14 @@ use App\Http\Controllers\AdminController;
 Route::get('/admin/login', function () {
     return view('auth.admin_login');
 });
-
+//会員登録
+Route::post('/register', [RegisterController::class,'store']);
 // ログイン処理
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/login', [LoginController::class, 'store']);
+Route::post('/admin/login', [LoginController::class, 'store']);
 // ログアウト処理
-Route::post('/logout', [AuthenticatedSessionController::class, 'logout']);
-Route::post('/admin/logout', [AuthenticatedSessionController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'destroy']);
+Route::post('/admin/logout', [AuthenticatedSessionController::class, 'destroy']);
 
 
 
