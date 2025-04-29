@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 
@@ -9,7 +10,8 @@ class StaffController extends Controller
 {
     //勤怠の表示
     public function attendanceView(){
-        return view('staff.attendance');
+        $dt = Carbon::now();
+        return view('staff.attendance',compact('dt'));
     }
     //勤怠リストの表示
     public function attendanceListView(){

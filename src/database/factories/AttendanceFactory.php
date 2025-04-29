@@ -16,10 +16,12 @@ class AttendanceFactory extends Factory
     public function definition()
     {
         return [
+
+            
             'user_id' => $this->faker->numberBetween(2,7),
-            'attendance_at' => $this->faker->date(),
+            'attendance_date' => $this->faker->dateTimeBetween('2023-06-01', '2023-06-30')->format('Y-m-d'),
             'clock_in_at' => $this->faker->dateTimeBetween('today 08:00','today 10:00')->format('H:i:s'),
-            'clock_out_at' => $this->faker->dateTimeBetween('today 17:00','today 20:00')->format('H:i:s'),,
+            'clock_out_at' => $this->faker->dateTimeBetween('today 17:00','today 20:00')->format('H:i:s'),
             'remark' => '電車遅延のため。',
         ];
     }
