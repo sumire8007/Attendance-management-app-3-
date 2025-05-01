@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttendanceBreakApplicationsTable extends Migration
+class CreateAttendanceRestApplicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateAttendanceBreakApplicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attendance_break_applications', function (Blueprint $table) {
+        Schema::create('attendance_rest_applications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('attendance_application_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('break_application_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('rest_application_id')->constrained()->cascadeOnDelete();
             $table->timestamp('approval_at');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateAttendanceBreakApplicationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendance_break_applications');
+        Schema::dropIfExists('attendance_rest_applications');
     }
 }

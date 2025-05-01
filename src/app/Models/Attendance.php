@@ -9,8 +9,8 @@ class Attendance extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'clock_in',
-        'clock_out',
+        'clock_in_at',
+        'clock_out_at',
         'remark',
         'attendance_total',
     ];

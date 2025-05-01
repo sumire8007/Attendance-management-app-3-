@@ -15,6 +15,9 @@ class CreateAttendanceRestsTable extends Migration
     {
         Schema::create('attendance_rests', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('rest_id')->constrained()->cascadeOnDelete();
+            $table->integer('total');
             $table->timestamps();
         });
     }

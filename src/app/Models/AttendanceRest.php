@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AttendanceBreak extends Model
+class AttendanceRest extends Model
 {
     use HasFactory;
-    public function attendances(){
+    public function attendances()
+    {
         return $this->belongsToMany(Attendance::class);
     }
-    public function breaks(){
-        return $this->belongsToMany(BreakTime::class);
+    public function rest()
+    {
+        return $this->belongsToMany(Rest::class);
     }
+
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBreakApplicationsTable extends Migration
+class CreateRestApplicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateBreakApplicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('break_applications', function (Blueprint $table) {
+        Schema::create('rest_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('break_id');
-            $table->time('break_in_change_at');
-            $table->time('break_out_change_at');
-            $table->integer('break_change_total')->nullable();
+            $table->foreignId('rest_id');
+            $table->time('rest_in_change_at');
+            $table->time('rest_out_change_at');
+            $table->integer('rest_change_total')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateBreakApplicationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('break_applications');
+        Schema::dropIfExists('rest_applications');
     }
 }

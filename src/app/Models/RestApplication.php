@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Rest extends Model
+class RestApplication extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'rest_in_at',
-        'rest_out_at',
-        'rest_total',
+        'rest_in_change_at',
+        'rest_out_change_at',
+        'rest_change_total',
     ];
-    public function users()
+    public function rests()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Rest::class);
     }
 
 }

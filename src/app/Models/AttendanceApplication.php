@@ -9,10 +9,10 @@ class AttendanceApplication extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'clock_in_change',
-        'clock_out_change',
+        'clock_in_change_at',
+        'clock_out_change_at',
         'remark_change',
-        'attendance_total',
+        'attendance_change_total',
     ];
     public function attendances(){
         return $this->belongsTo(Attendance::class);
