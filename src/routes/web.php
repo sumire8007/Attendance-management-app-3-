@@ -32,7 +32,7 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
 // ログイン後の画面表示(ユーザーのみ)
 // Route::group(['middleware' => ['auth', 'can:user-higher']],function(){
     Route::get('/attendance', [StaffController::class, 'attendanceView']);
-    Route::get('/attendance/list', [StaffController::class, 'attendanceListView']);
+    Route::get('/attendance/list/{year?}/{month?}', [StaffController::class, 'attendanceListView']);
     Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
     Route::get('/attendance/id', [StaffController::class, 'attendanceDetail']);
 // });

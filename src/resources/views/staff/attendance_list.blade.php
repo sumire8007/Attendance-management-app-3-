@@ -9,9 +9,9 @@
             <h2>勤怠一覧</h2>
         </div>
         <div class="attendance_day">
-            <span><p>←前月</p></span>
-            <p>📅2023/6</p>
-            <span><p>翌月→</p></span>
+            <span><a href="{{ url('/attendance/list', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">←前月</a></span>
+            <p>📅{{ $currentDate->format('Y/m') }}</p>
+            <span><a href="{{ url('/attendance/list', ['year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">翌月→</a></span>
         </div>
 
         <div class="attendance_table">
@@ -24,12 +24,22 @@
                     <th>合計</th>
                     <th>詳細</th>
                 </tr>
-                <tr>
+
+                @foreach($attendanceDate as $date)
+                    <tr>
+                        <td>{{ $date['date']->format('m/d(D)') }}</td>
+                        <td>{{ $date['clock_in_at'] ?? '-' }}</td>
+                        <td>{{ $date['clock_out_at'] ?? '-' }}</td>
+                        <td>{{ $date['rest'] ?? '-' }}</td>
+                        <td>{{ $date['work'] ?? '-' }}</td>
+                    </tr>
+                @endforeach
+                <!-- <tr>
                     <td>06/01(木)</td>
                     <td>9:00</td>
                     <td>18:00</td>
-                    <td>1:00</td> <!--休憩時間の合計-->
-                    <td>8:00</td> <!--勤務時間の合計-->
+                    <td>1:00</td>
+                    <td>8:00</td>
                     <form action="" method="">
                     <td>
                         <a href="/attendance/id">詳細</a>
@@ -48,7 +58,7 @@
                     </td>
 
                     </form>
-                </tr>
+                </tr> -->
             </table>
         </div>
     </div>
