@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Attendance;
-use App\Models\BreakTime;
+use App\Models\Rest;
 use App\Models\AttendanceApplication;
-use App\Models\BreakApplication;
+use App\Models\RestApplication;
 use Vtiful\Kernel\Format;
 
 class StaffController extends Controller
