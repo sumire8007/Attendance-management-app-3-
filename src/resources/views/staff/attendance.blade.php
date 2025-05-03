@@ -26,24 +26,26 @@
             @if(empty($attendance))
             <form action="/attendance" method="post">
                 @csrf
-                <button>出勤</button>
+                <button class="attendance_button">出勤</button>
             </form>
             @elseif(isset($attendance->clock_in_at) && empty($attendance->clock_out_at) && empty($rest))
-                <form action="/attendance/clockout" method="post">
-                    @csrf
-                        <button>退勤</button>
-                </form>
-                <form action="/attendance/restin" method="post">
-                    @csrf
-                        <button>休憩入り</button>
-                </form>
+                <div class="working_button_group">
+                    <form action="/attendance/clockout" method="post">
+                        @csrf
+                            <button class="attendance_button">退勤</button>
+                    </form>
+                    <form action="/attendance/restin" method="post">
+                        @csrf
+                            <button class="rest_button">休憩入</button>
+                    </form>
+                </div>
             @elseif(isset($rest->rest_in_at) && empty($rest->rest_out_at))
                 <form action="/attendance/restout" method="post">
                     @csrf
-                        <button>休憩戻り</button>
+                        <button class="rest_button">休憩戻</button>
                 </form>
             @elseif(isset($attendance->clock_out_at))
-                お疲れ様でした。
+                <p class="clock_out_message">お疲れ様でした。</p>
             @endif
         </div>
     </div>

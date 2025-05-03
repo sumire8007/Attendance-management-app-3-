@@ -27,7 +27,6 @@ class StaffController extends Controller
         ->whereDate('rest_date', $date->format('Y-m-d'))
         ->whereNull('rest_out_at')
         ->first();
-        // dd($rest);
         return view('staff.attendance',compact('date','attendance','rest'));
     }
     //勤怠リストの表示
@@ -92,8 +91,6 @@ class StaffController extends Controller
     public function attendanceDetail(){
         return view('staff.attendance_detail');
     }
-
-
     //出勤
     public function AddClockIn(){
         $date = now();
@@ -105,7 +102,7 @@ class StaffController extends Controller
             'clock_in_at' => $date->format('H:i:s'),
         ]);
         // dd($attendance);
-        return redirect('/attendance')->with('message','出勤を受付ました！');
+        return redirect('/attendance')->with('message','出勤を受付ました');
     }
     // 退勤
     public function AddClockOut(){
@@ -135,7 +132,7 @@ class StaffController extends Controller
             'attendance_id' => $attendance->id,
             'rest_id' => $rest->id,
         ]);
-        return redirect('/attendance')->with('message', '休憩入りを受付ました！');
+        return redirect('/attendance')->with('message', '休憩入りを受付ました');
     }
     //休憩戻り
     public function AddRestOut(){
@@ -146,6 +143,8 @@ class StaffController extends Controller
         ->whereNull('rest_out_at')
         ->first()
         ->update(['rest_out_at' => $date->format('H:i:s')]);
-        return redirect('/attendance')->with('message', '休憩戻りを受付ました。');
+        return redirect('/attendance')->with('message', '休憩戻りを受付ました');
     }
+
+
 }
