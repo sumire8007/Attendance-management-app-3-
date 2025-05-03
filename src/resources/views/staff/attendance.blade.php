@@ -7,13 +7,44 @@
 @section('content')
     <div class="attendance_group">
         <div class="attendance_content">
-            <div class="attendance_status">勤務外</div>
-            <div class="attendance_day"> {{ $dt->year.'年'.$dt->month.'月'.$dt->day.'日' }}</div>
-            <div class="attendance_time">{{ $dt->format('H:i') }}</div>
-            <form action="" method="post">
+            @if(session('message'))
+                <div>{{ session('message') }}</div>
+            @endif
+            @if(empty($attendance))
+                <div class="attendance_status">勤務外</div>
+            @elseif(isset($attendance->clock_in_at) && empty($attendance->clock_out_at) && empty($rest))
+                <div class="attendance_status">出勤中</div>
+            @elseif(isset($rest->rest_in_at) && empty($rest->rest_out_at))
+                <div class="attendance_status">休憩中</div>
+            @elseif(isset($attendance->clock_out_at))
+                <div class="attendance_status">退勤済み</div>
+            @endif
+
+            <div class="attendance_day"> {{ $date->year . '年' . $date->month . '月' . $date->day . '日' }}</div>
+            <div class="attendance_time">{{ $date->format('H:i') }}</div>
+
+            @if(empty($attendance))
+            <form action="/attendance" method="post">
                 @csrf
                 <button>出勤</button>
             </form>
+            @elseif(isset($attendance->clock_in_at) && empty($attendance->clock_out_at) && empty($rest))
+                <form action="/attendance/clockout" method="post">
+                    @csrf
+                        <button>退勤</button>
+                </form>
+                <form action="/attendance/restin" method="post">
+                    @csrf
+                        <button>休憩入り</button>
+                </form>
+            @elseif(isset($rest->rest_in_at) && empty($rest->rest_out_at))
+                <form action="/attendance/restout" method="post">
+                    @csrf
+                        <button>休憩戻り</button>
+                </form>
+            @elseif(isset($attendance->clock_out_at))
+                お疲れ様でした。
+            @endif
         </div>
     </div>
 @endsection

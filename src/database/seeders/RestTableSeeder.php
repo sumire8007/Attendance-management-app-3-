@@ -32,6 +32,5 @@ class RestTableSeeder extends Seeder
                     'rest_out_at' => '13:00',
                 ]);
         }
-
     }
 }

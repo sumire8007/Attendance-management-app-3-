@@ -27,11 +27,18 @@
 
                 @foreach($attendanceDate as $date)
                     <tr>
-                        <td>{{ $date['date']->format('m/d(D)') }}</td>
+                        <td>{{ $date['date']->translatedFormat('m/d(D)') }}</td>
                         <td>{{ $date['clock_in_at'] ?? '-' }}</td>
                         <td>{{ $date['clock_out_at'] ?? '-' }}</td>
                         <td>{{ $date['rest'] ?? '-' }}</td>
                         <td>{{ $date['work'] ?? '-' }}</td>
+                        <td>
+                            @if($date['id'])
+                            <a href="/attendance/{{ $date['id'] }}">詳細</a>
+                            @else
+                            -
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 <!-- <tr>

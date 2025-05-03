@@ -45,3 +45,10 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
     Route::get('/admin/stamp_correction_request/list', [AdminController::class, 'requestList']);
     Route::get('/admin/stamp_correction_request/approve/', [AdminController::class, 'approval']);
 // });
+
+
+// 機能
+Route::post('/attendance', [StaffController::class, 'AddClockIn']);
+Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
+Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
+Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
