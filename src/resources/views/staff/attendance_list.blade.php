@@ -30,7 +30,7 @@
                         <td>{{ $date['date']->translatedFormat('m/d(D)') }}</td>
                         <td>{{ $date['clock_in_at'] ?? '-' }}</td>
                         <td>{{ $date['clock_out_at'] ?? '-' }}</td>
-                        <td>{{ $date['rest'] ?? '-' }}</td>
+                        <td>{{ $date['rest_total'] ?? '-' }}</td>
                         <td>{{ $date['work'] ?? '-' }}</td>
                         <td>
                             @if($date['id'])
@@ -41,31 +41,6 @@
                         </td>
                     </tr>
                 @endforeach
-                <!-- <tr>
-                    <td>06/01(木)</td>
-                    <td>9:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <form action="" method="">
-                    <td>
-                        <a href="/attendance/id">詳細</a>
-                    </td>
-                    </form>
-                </tr>
-                <tr>
-                    <td>06/02(金)</td>
-                    <td>9:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <form action="">
-                    <td>
-                        <a href="/attendance/id">詳細</a>
-                    </td>
-
-                    </form>
-                </tr> -->
             </table>
         </div>
     </div>

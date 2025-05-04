@@ -32,36 +32,6 @@ class StaffController extends Controller
     //勤怠リストの表示
     public function attendanceListView($year = null, $month = null){
         $userId = Auth::user()->id;
-        // $attendanceDate = ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // ChatGPTより
-        $userId = auth()->id();
         // パラメーターのyearがあったらそれを使う、無ければnow　※monthも同じく　例）$date = 2025-05-01
         $date = Carbon::createFromDate($year ?? now()->year, $month ?? now()->month, 1);
         // 指定月の開始日と終了日を取得
@@ -70,38 +40,42 @@ class StaffController extends Controller
         // 月の日付を1日ずつリストに入れる　　$dates = collect();は$dateの中は配列になるような箱を用意
         $dates = collect();
         foreach($startOfMonth->toPeriod($endOfMonth) as $day){
-            $dates->push($day->copy());  //push()は追加、copy()は$dayを上書きしないように
+            $dates->push($day->copy());
         }
         // ログインしているユーザーの勤怠データのうち、パラメーターで指定された年月の1日〜30日までを$attendancesに格納
         $attendances = Attendance::where('user_id', $userId)
         ->whereBetween('attendance_date', [$startOfMonth, $endOfMonth])
         ->get()
         ->keyBy('attendance_date');
+        $rests = Rest::where('user_id', $userId)
+            ->whereBetween('rest_date', [$startOfMonth, $endOfMonth])
+            ->get();
+        $restTotals = $rests->groupBy(function ($rest) {
+            return Carbon::parse($rest->rest_date)->format('Y-m-d');
+        })->map(function ($restsForDay) {
+            return $restsForDay->sum('rest_total');
+        });
+
         // 日付ごとにデータを整形　map()はlaravel collectionの繰り返しメソッド
-        $attendanceDate = $dates->map(function($day) use ($attendances) {
+        $attendanceDate = $dates->map(function($day) use ($attendances, $restTotals) {
             // $attendancesの中からその日の日付を探す、無ければエラーを返すのではなくnullを格納
             $record = $attendances[$day->format('Y-m-d')] ?? null;
+            $dateKey = $day->format('Y-m-d');
             // $record中がnull,その日のデータが無いときnull,あったらその日のデータ（clock_in_at,clock_out_atを格納）
-            $in = $record? $record->clock_in_at : null;
-            $out = $record? $record->clock_out_at : null;
-            // 三項演算子、$recordがあればTRUE＝1：00、FALSE＝null
-            $rest = $record ? '01:00' : null;
+            $in = $record && $record->clock_in_at ? Carbon::parse($record->clock_in_at)->format('H:i') : null;
+            $out = $record && $record->clock_out_at ? Carbon::parse($record->clock_out_at)->format('H:i') : null;
+            $restMinutes = $restTotals[$dateKey] ?? 0;
+            $restTotal = sprintf('%02d:%02d', intdiv($restMinutes, 60), $restMinutes % 60);
+            $attendanceTotal = $record && $record->attendance_total ? 
+            ($record->attendance_total) - $restMinutes : null;
+            $total = sprintf('%02d:%02d', intdiv($attendanceTotal, 60), $attendanceTotal % 60);
             $dateId = $record ? $record->id : null;
-            // 出勤と退勤があれば、勤務時間を計算して、H:i形式で表示
-            $work = null;
-            if($in && $out){
-                $start = Carbon::parse($in);
-                $end = Carbon::parse($out);
-                $workDuration = $end->diffInMinutes($start) - 60;
-                $work =sprintf('%d:%02d',floor($workDuration/60),$workDuration % 60);
-            }
-            // 日ごとの表示用データを配列で返す
             return [
                 'date' => $day,
                 'clock_in_at' => $in,
                 'clock_out_at' => $out,
-                'rest' => $rest,
-                'work' => $work,
+                'rest_total' => $restTotal,
+                'work' => $total ,
                 'id' => $dateId,
             ];
         });
@@ -125,14 +99,12 @@ class StaffController extends Controller
     public function AddClockIn(){
         $date = now();
         $userId = Auth::user()->id;
-        // dd($userId);
         $attendance = Attendance::create([
             'user_id' => $userId,
             'attendance_date' => $date->format('Y-m-d'),
             'clock_in_at' => $date->format('H:i:s'),
         ]);
-        // dd($attendance);
-        return redirect('/attendance')->with('message','出勤を受付ました');
+        return redirect('/attendance')->with('message','出勤を受付ました!');
     }
     // 退勤
     public function AddClockOut(){
@@ -171,19 +143,28 @@ class StaffController extends Controller
             'attendance_id' => $attendance->id,
             'rest_id' => $rest->id,
         ]);
-        return redirect('/attendance')->with('message', '休憩入りを受付ました');
+        return redirect('/attendance')->with('message', '休憩入りを受付ました!');
     }
     //休憩戻り
     public function AddRestOut(){
         $date = Carbon::now();
         $userId = Auth::user()->id;
-        $rest = Rest::where('user_id',$userId)
+        $rest = Rest::where('user_id', $userId)
+            ->whereDate('rest_date', $date)
+            ->whereNull('rest_out_at')
+            ->first();
+        $restIn = Carbon::parse($rest->rest_in_at);
+        $restOut = Carbon::now();
+        $restTotal = $restOut->diffInMinutes($restIn);
+        Rest::where('user_id',$userId)
         ->whereDate('rest_date',$date)
         ->whereNull('rest_out_at')
         ->first()
-        ->update(['rest_out_at' => $date->format('H:i:s')]);
-        return redirect('/attendance')->with('message', '休憩戻りを受付ました');
+        ->update([
+            'rest_out_at' => $date->format('H:i:s'),
+            'rest_total' => $restTotal,
+        ]);
+        return redirect('/attendance')->with('message', '休憩戻りを受付ました!');
     }
-
 
 }

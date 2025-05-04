@@ -25,13 +25,20 @@
 .attendance_day p {
     text-align: center;
     width: 100px;
+    font-weight: bold;
 }
-.attendance_day span {
+.attendance_day a {
+    display: inline-block;
     color: #737373;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 15px 30px 0 30px;
 }
 .attendance_table {
     background-color: white;
     border-radius: 10px;
+    margin-bottom: 50px;
 }
 .attendance_table tr {
     border-bottom: solid #F0Eff0 2px;
