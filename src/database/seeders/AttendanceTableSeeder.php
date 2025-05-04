@@ -23,14 +23,14 @@ class AttendanceTableSeeder extends Seeder
         foreach($userIds as $userId){
             $startDate = Carbon::create(2025, 1, 1);
             $endDate = Carbon::create(2025, 4, 30);
-
             foreach ($startDate->toPeriod($endDate) as $date)
                 Attendance::create([
                     'user_id' => $userId,
                     'attendance_date' => $date->format('Y-m-d'),
-                    'clock_in_at' => $faker->dateTimeBetween($date->format('Y-m-d') . '08:00', $date->format('Y-m-d') . '10:00')->format('H:i:s'),
-                    'clock_out_at' => $faker->dateTimeBetween($date->format('Y-m-d') . '17:00', $date->format('Y-m-d') . '18:00')->format('H:i:s'),
-                    'remark' => '電車遅延のため。'
+                    'clock_in_at' => '9:00',
+                    'clock_out_at' => '18:00',
+                    'remark' => '電車遅延のため。',
+                    'attendance_total' => 540,
                     ]);
         }
     }

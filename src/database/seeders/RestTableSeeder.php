@@ -30,6 +30,7 @@ class RestTableSeeder extends Seeder
                     'rest_date' => $date->format('Y-m-d'),
                     'rest_in_at' => '12:00',
                     'rest_out_at' => '13:00',
+                    'rest_total' => 60,
                 ]);
         }
     }

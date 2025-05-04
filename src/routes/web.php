@@ -47,8 +47,10 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
 // });
 
 
-// 機能
+//出退勤・休憩機能
 Route::post('/attendance', [StaffController::class, 'AddClockIn']);
 Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
 Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
 Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
+
+//勤怠一覧

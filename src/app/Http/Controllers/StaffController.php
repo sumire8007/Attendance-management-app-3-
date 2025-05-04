@@ -31,6 +31,36 @@ class StaffController extends Controller
     }
     //勤怠リストの表示
     public function attendanceListView($year = null, $month = null){
+        $userId = Auth::user()->id;
+        // $attendanceDate = ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ChatGPTより
         $userId = auth()->id();
         // パラメーターのyearがあったらそれを使う、無ければnow　※monthも同じく　例）$date = 2025-05-01
         $date = Carbon::createFromDate($year ?? now()->year, $month ?? now()->month, 1);
@@ -108,10 +138,19 @@ class StaffController extends Controller
     public function AddClockOut(){
         $date = Carbon::now();
         $userId = Auth::user()->id;
-        $attendance = Attendance::where('user_id',$userId)
+        $attendance = Attendance::where('user_id', $userId)
+            ->whereDate('attendance_date', $date->format('Y-m-d'))
+            ->first();
+        $clockIn = Carbon::parse($attendance->clock_in_at);
+        $clockOut = Carbon::now();
+        $attendanceTotal = $clockOut->diffInMinutes($clockIn);
+        Attendance::where('user_id',$userId)
         ->whereDate('attendance_date',$date->format('Y-m-d'))
         ->first()
-        ->update(['clock_out_at'=> $date->format('H:i:s')]);
+        ->update([
+            'clock_out_at' => $clockOut->format('H:i:s'),
+            'attendance_total' => $attendanceTotal,
+        ]);
         return redirect('/attendance');
     }
     //休憩入り
