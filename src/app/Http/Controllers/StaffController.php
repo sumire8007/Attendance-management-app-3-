@@ -86,14 +86,17 @@ class StaffController extends Controller
             'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
         ]);
     }
+    //勤怠詳細(申請入力)
+    public function attendanceDetail($id)
+    {
+        Attendance::where('id', $id)->with('rests');
+        AttendanceRest::where('attendance_id', $id)->get();
+        return view('staff.attendance_detail');
+    }
 
     //申請一覧の表示
     public function requestListView(){
         return view('staff.request');
-    }
-    //勤怠詳細(申請入力)
-    public function attendanceDetail(){
-        return view('staff.attendance_detail');
     }
     //出勤
     public function AddClockIn(){

@@ -34,7 +34,7 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
     Route::get('/attendance', [StaffController::class, 'attendanceView']);
     Route::get('/attendance/list/{year?}/{month?}', [StaffController::class, 'attendanceListView']);
     Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
-    Route::get('/attendance/id', [StaffController::class, 'attendanceDetail']);
+    Route::get('/attendance/{id?}', [StaffController::class, 'attendanceDetail']);
 // });
 // ログイン後の画面表示(管理者のみ)
 // Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
