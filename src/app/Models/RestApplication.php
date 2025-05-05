@@ -9,6 +9,7 @@ class RestApplication extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'rest_id',
         'rest_in_change_at',
         'rest_out_change_at',
         'rest_change_total',

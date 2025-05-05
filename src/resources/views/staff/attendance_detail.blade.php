@@ -9,40 +9,52 @@
         <div class="attendance_title">
             <h2>勤怠詳細</h2>
         </div>
-        <form action="" method="">
+        <form action="/attendance/application" method="post">
+            @csrf
+            <input type="hidden" name="attendance_id" value="{{ $attendanceDates->id }}">
             <div class="attendance_table">
                 <table>
                     <tr>
                         <th>名前</th>
-                        <td>{{ $attendanceDate->user->name }}</td>
+                        <td>{{ $attendanceDates->user->name }}</td>
                     </tr>
                     <tr>
                         <th>日付</th>
-                        <td>{{ $attendanceDate->attendance_date }}</td>
+                        <td>{{ $date->year . '年' . $date->month . '月' . $date->day . '日' }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <th>出勤・退勤</th>
                         <td>
-                            <input type="text"  name="clock_in_at" value="{{ \Carbon\Carbon::parse($attendanceDate->clock_in_at)->format('H:i') }}">
+                            <input type="text"  name="clock_in_change_at" value="{{ $in }}">
                             <p>~</p>
-                            <input type="text" name="clock_out_at" value="{{ \Carbon\Carbon::parse($attendanceDate->clock_out_at)->format('H:i') }}">
+                            <input type="text" name="clock_out_change_at" value="{{ $out }}">
                         </td>
                     </tr>
                     @foreach($restDates as $restDate)
+                        <input type="hidden" name="rest_id[]" value="{{ $restDate->rest->id }}">
                         <tr>
                             <th>休憩</th>
                             <td>
-                                <input type="text" name="rest_in_at" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
+                                <input type="text" name="rest_in_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
                                 <p>~</p>
-                                <input type="text" name="rest_out_in" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') }}">
+                                <input type="text" name="rest_out_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') }}">
                             </td>
                         </tr>
                     @endforeach
                     <tr>
+                        <th>休憩</th>
+                        <td>
+                            <input type="text" name="rest_in_at[]" value="">
+                            <p>~</p>
+                            <input type="text" name="rest_out_at[]" value="">
+                            <input type="hidden" name="rest_id[]" value="">
+                        </td>
+                    </tr>
+                    <tr>
                         <th>備考</th>
                         <td class="textarea">
-                            <textarea name="remark"  cols="20" rows="3">{{ $attendanceDate->remark }}</textarea>
+                            <textarea name="remark_change"  cols="20" rows="3">{{ $attendanceDates->remark }}</textarea>
                         </td>
                     </tr>
                 </table>

@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class AttendanceRestApplication extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'attendance_application_id',
+        'attendance_application_id',
+    ];
     public function attendanceApplications()
     {
         return $this->belongsToMany(AttendanceApplication::class);

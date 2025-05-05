@@ -53,4 +53,5 @@ Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
 Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
 Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
 
-//勤怠一覧
+//勤怠修正機能
+Route::post('/attendance/application', [StaffController::class, 'application']);
