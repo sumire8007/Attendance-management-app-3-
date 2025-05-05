@@ -14,11 +14,11 @@ class AttendanceRest extends Model
     ];
     public function attendances()
     {
-        return $this->belongsToMany(Attendance::class);
+        return $this->belongsTo(Attendance::class);
     }
     public function rest()
     {
-        return $this->belongsToMany(Rest::class);
+        return $this->belongsTo(Rest::class);
     }
 
 }

@@ -89,9 +89,14 @@ class StaffController extends Controller
     //勤怠詳細(申請入力)
     public function attendanceDetail($id)
     {
-        Attendance::where('id', $id)->with('rests');
-        AttendanceRest::where('attendance_id', $id)->get();
-        return view('staff.attendance_detail');
+        $attendanceDate = Attendance::where('id', $id)->with('user')->first();
+        $clockIn = Carbon::parse($attendanceDate->clock_in_at)->format('H:i');
+        $clockOut = Carbon::parse($attendanceDate->clock_out_at)->format('H:i');
+        $restDates = AttendanceRest::where('attendance_id', $id)
+        ->with('rest')
+        ->get();
+        // dd();
+        return view('staff.attendance_detail',compact('attendanceDate','clockIn','clockOut','restDates'));
     }
 
     //申請一覧の表示

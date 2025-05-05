@@ -14,32 +14,35 @@
                 <table>
                     <tr>
                         <th>名前</th>
-                        <td>西伶奈</td>
+                        <td>{{ $attendanceDate->user->name }}</td>
                     </tr>
                     <tr>
                         <th>日付</th>
-                        <td>2023年6月1日</td>
+                        <td>{{ $attendanceDate->attendance_date }}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>出勤・退勤</th>
                         <td>
-                            <input type="text"  name="" value="9:00">
+                            <input type="text"  name="clock_in_at" value="{{ \Carbon\Carbon::parse($attendanceDate->clock_in_at)->format('H:i') }}">
                             <p>~</p>
-                            <input type="text" name="" value="18:00">
+                            <input type="text" name="clock_out_at" value="{{ \Carbon\Carbon::parse($attendanceDate->clock_out_at)->format('H:i') }}">
                         </td>
                     </tr>
-                    <tr>
-                        <th>休憩</th>
-                        <td>
-                            <input type="text" name="" value="12:00">
-                            <p>~</p>
-                            <input type="text" name="" value="13:00">
-                        </td>
-                    </tr>
+                    @foreach($restDates as $restDate)
+                        <tr>
+                            <th>休憩</th>
+                            <td>
+                                <input type="text" name="rest_in_at" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
+                                <p>~</p>
+                                <input type="text" name="rest_out_in" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') }}">
+                            </td>
+                        </tr>
+                    @endforeach
                     <tr>
                         <th>備考</th>
                         <td class="textarea">
-                            <textarea name=""  cols="20" rows="3">電車遅延のため。</textarea>
+                            <textarea name="remark"  cols="20" rows="3">{{ $attendanceDate->remark }}</textarea>
                         </td>
                     </tr>
                 </table>
