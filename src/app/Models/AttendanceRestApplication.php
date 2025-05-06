@@ -15,11 +15,11 @@ class AttendanceRestApplication extends Model
     ];
     public function attendanceApplications()
     {
-        return $this->belongsToMany(AttendanceApplication::class);
+        return $this->belongsTo(AttendanceApplication::class);
     }
     public function restApplications()
     {
-        return $this->belongsToMany(RestApplication::class);
+        return $this->belongsTo(RestApplication::class);
     }
 
 }

@@ -1,6 +1,6 @@
 @extends('layouts.staff_default')
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/attendance_detail.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/attendance_detail.css') }}">
 @endsection
 
 @section('content')
@@ -26,9 +26,9 @@
                     <tr>
                         <th>出勤・退勤</th>
                         <td>
-                            <input type="text"  name="clock_in_change_at" value="{{ $in }}">
+                            <input type="time"  name="clock_in_change_at" value="{{ $in }}">
                             <p>~</p>
-                            <input type="text" name="clock_out_change_at" value="{{ $out }}">
+                            <input type="time" name="clock_out_change_at" value="{{ $out }}">
                         </td>
                     </tr>
                     @foreach($restDates as $restDate)
@@ -36,18 +36,18 @@
                         <tr>
                             <th>休憩</th>
                             <td>
-                                <input type="text" name="rest_in_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
+                                <input type="time" name="rest_in_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
                                 <p>~</p>
-                                <input type="text" name="rest_out_at[]" value="{{ $restDate->rest->rest_out_at ? \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') : '-- : --' }}">
+                                <input type="time" name="rest_out_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i')}}">
                             </td>
                         </tr>
                     @endforeach
                     <tr>
                         <th>休憩</th>
                         <td>
-                            <input type="text" name="rest_in_at[]" value="">
+                            <input type="time" name="rest_in_at[]" value="">
                             <p>~</p>
-                            <input type="text" name="rest_out_at[]" value="">
+                            <input type="time" name="rest_out_at[]" value="">
                             <input type="hidden" name="rest_id[]" value="">
                         </td>
                     </tr>

@@ -9,8 +9,8 @@
             <h2>申請一覧</h2>
         </div>
         <div class="attendance_status">
-            <a href="">承認待ち</a>
-            <a href="">承認済み</a>
+            <a href="/stamp_correction_request/list">承認待ち</a>
+            <a href="/stamp_correction_request/list">承認済み</a>
         </div>
         <div class="attendance_table">
             <table>
@@ -22,6 +22,20 @@
                     <th>申請日時</th>
                     <th>詳細</th>
                 </tr>
+
+                @foreach($waitingApprovals as $waitingApproval)
+                    <tr>
+                        <td>承認待ち</td>
+                        <td>{{ $waitingApproval->attendanceApplications->attendances->user->name }}</td>
+                        <td>{{ $waitingApproval->attendanceApplications->attendances->attendance_date }}</td>
+                        <td>{{ $waitingApproval->attendanceApplications->remark_change }}</td>
+                        <td>{{ $waitingApproval->created_at }}</td>
+                        <td>
+                            <a href="/attendance/{{ $waitingApproval->attendanceApplication['id'] }}">詳細</a>
+                        </td>
+                    </tr>
+
+                @endforeach
                 <tr>
                     <td>承認待ち</td>
                     <td>西伶奈</td>

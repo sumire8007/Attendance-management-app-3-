@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ApplicationRequest;
 use App\Models\AttendanceRestApplication;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Console\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -142,9 +144,16 @@ class StaffController extends Controller
         }
         return redirect('/attendance/list');
     }
-    //申請一覧の表示
+    //申請一覧の表示(承認待ち)
     public function requestListView(){
-        return view('staff.request');
+        $waitingApprovals = AttendanceRestApplication::where('approval_at', null)
+        ->with('attendanceApplications','restApplications')
+        ->with('attendances','rests')
+        ->with('user')
+        ->get();
+
+        // dd($waitingApprovals);
+        return view('staff.request' ,compact('waitingApprovals'));
     }
     //出勤
     public function AddClockIn(){
