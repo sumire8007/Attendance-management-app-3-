@@ -87,9 +87,10 @@ class StaffController extends Controller
             'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
         ]);
     }
-    //勤怠詳細(申請入力)
+    //勤怠詳細表示
     public function attendanceDetail($id)
     {
+        //修正画面用
         $attendanceDates = Attendance::where('id', $id)->with('user')->first();
         $date = Carbon::parse($attendanceDates->attendance_date);
         $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
@@ -97,42 +98,46 @@ class StaffController extends Controller
         $restDates = AttendanceRest::where('attendance_id', $id)
         ->with('rest')
         ->get();
+        //承認待ち用
+        $attendanceApplicationDate = AttendanceApplication::where('attendance_id', $id)->first();
+        
+        // $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)->with('restApplication')->get();
+
+
         return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates'));
     }
-    // 修正 attendance_applications,rest_applicationsにcreate
+    // 勤怠を修正
     public function application(Request $request)
     {
-        AttendanceApplication::create([
+        $attendanceApplication = AttendanceApplication::create([
             'attendance_id' => $request->attendance_id,
             'clock_in_change_at' => $request->clock_in_change_at,
             'clock_out_change_at' => $request->clock_out_change_at,
             'remark_change' => $request->remark_change,
-            'attendance_change' => Carbon::parse($request->clock_out_change_at)->diffInMinutes(Carbon::parse($request->clock_in_change_at)),
+            'attendance_change_total' => Carbon::parse($request->clock_out_change_at)->diffInMinutes(Carbon::parse($request->clock_in_change_at)),
         ]);
 
         $restIds = $request->input('rest_id');
         $restIns = $request->input('rest_in_at');
         $restOuts = $request->input('rest_out_at');
 
+        $restApplications = [];
         for ($i = 0; $i < count($restIns); $i++) {
             // 入力が空の行はスキップ（例：新規行が空欄のまま送信された場合）
             if (empty($restIns[$i]) || empty($restOuts[$i])) {
                 continue;
             }
-            RestApplication::create([
+            $restApplications[] = RestApplication::create([
                 'rest_id' => $restIds[$i]?? null,
                 'rest_in_change_at' => $restIns[$i],
                 'rest_out_change_at' => $restOuts[$i],
                 'rest_change_total' => Carbon::parse($restOuts[$i])->diffInMinutes(Carbon::parse($restIns[$i])),
             ]);
         }
-        for ($i = 0; $i < count($restIns); $i++) {
-            $attendanceApplicationId = AttendanceApplication::where('attendance_id', $request->attendance_id)->pluck('id');
-            $restApplicationId = RestApplication::where('rest_id', $restIds[$i])->pluck('id');
-            dd($restApplicationId);
+        foreach($restApplications as $restApplication){
             AttendanceRestApplication::create([
-                'attendant_application_id' => $attendanceApplicationId,
-                'rest_application_id' => $restApplicationId,
+                'attendance_application_id' => $attendanceApplication->id,
+                'rest_application_id' => $restApplication->id,
             ]);
         }
         return redirect('/attendance/list');

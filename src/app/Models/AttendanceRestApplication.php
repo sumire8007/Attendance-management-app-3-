@@ -10,7 +10,8 @@ class AttendanceRestApplication extends Model
     use HasFactory;
     protected $fillable = [
         'attendance_application_id',
-        'attendance_application_id',
+        'rest_application_id',
+        'approval_at',
     ];
     public function attendanceApplications()
     {

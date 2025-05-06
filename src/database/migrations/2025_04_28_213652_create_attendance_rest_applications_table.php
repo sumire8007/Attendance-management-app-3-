@@ -17,7 +17,7 @@ class CreateAttendanceRestApplicationsTable extends Migration
             $table->id();
             $table->foreignId('attendance_application_id')->constrained()->cascadeOnDelete();
             $table->foreignId('rest_application_id')->constrained()->cascadeOnDelete();
-            $table->timestamp('approval_at');
+            $table->timestamp('approval_at')->nullable();
             $table->timestamps();
         });
     }

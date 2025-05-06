@@ -38,7 +38,7 @@
                             <td>
                                 <input type="text" name="rest_in_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
                                 <p>~</p>
-                                <input type="text" name="rest_out_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') }}">
+                                <input type="text" name="rest_out_at[]" value="{{ $restDate->rest->rest_out_at ? \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') : '-- : --' }}">
                             </td>
                         </tr>
                     @endforeach
