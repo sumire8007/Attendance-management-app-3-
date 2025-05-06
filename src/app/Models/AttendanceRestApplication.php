@@ -14,15 +14,15 @@ class AttendanceRestApplication extends Model
         'rest_application_id',
         'approval_at',
     ];
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function attendanceApplications()
+    public function attendanceApplication()
     {
         return $this->belongsTo(AttendanceApplication::class);
     }
-    public function restApplications()
+    public function restApplication()
     {
         return $this->belongsTo(RestApplication::class);
     }

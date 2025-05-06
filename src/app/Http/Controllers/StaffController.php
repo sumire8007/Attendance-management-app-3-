@@ -111,8 +111,10 @@ class StaffController extends Controller
     // 勤怠を修正
     public function application(Request $request)
     {
+        $attendanceDate = Attendance::where('id',$request->attendance_id)->value('attendance_date');
         $attendanceApplication = AttendanceApplication::create([
             'attendance_id' => $request->attendance_id,
+            'attendance_change_date' => Carbon::parse($attendanceDate)->format('Y-m-d'),
             'clock_in_change_at' => $request->clock_in_change_at,
             'clock_out_change_at' => $request->clock_out_change_at,
             'remark_change' => $request->remark_change,
@@ -129,8 +131,11 @@ class StaffController extends Controller
             if (empty($restIns[$i]) || empty($restOuts[$i])) {
                 continue;
             }
+            $restDate = Rest::where('id',$restIds[$i])->value('rest_date');
+
             $restApplications[] = RestApplication::create([
                 'rest_id' => $restIds[$i]?? null,
+                'rest_change_date' => Carbon::parse($restDate)->format('Y-m-d'),
                 'rest_in_change_at' => $restIns[$i],
                 'rest_out_change_at' => $restOuts[$i],
                 'rest_change_total' => Carbon::parse($restOuts[$i])->diffInMinutes(Carbon::parse($restIns[$i])),
@@ -138,22 +143,25 @@ class StaffController extends Controller
         }
         foreach($restApplications as $restApplication){
             AttendanceRestApplication::create([
+                'user_id' => Auth::user()->id,
                 'attendance_application_id' => $attendanceApplication->id,
                 'rest_application_id' => $restApplication->id,
             ]);
         }
         return redirect('/attendance/list');
     }
-    //申請一覧の表示(承認待ち)
+    //申請一覧の表示
     public function requestListView(){
-        $waitingApprovals = AttendanceRestApplication::where('approval_at', null)
-        ->with('attendanceApplications','restApplications')
-        ->with('attendances','rests')
-        ->with('user')
+        //承認待ちのデータ
+        $waitingApprovals = AttendanceRestApplication::whereNull('approval_at')
+        ->with('attendanceApplication','restApplication','user')
         ->get();
+        //承認済みのデータ
+        $approvals = AttendanceRestApplication::whereNotNull('approval_at')
+            ->with('attendanceApplication', 'restApplication', 'user')
+            ->get();
 
-        // dd($waitingApprovals);
-        return view('staff.request' ,compact('waitingApprovals'));
+        return view('staff.request' ,compact('waitingApprovals','approvals'));
     }
     //出勤
     public function AddClockIn(){
