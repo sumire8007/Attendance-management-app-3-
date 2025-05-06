@@ -10,6 +10,7 @@ class AttendanceApplication extends Model
     use HasFactory;
     protected $fillable = [
         'attendance_id',
+        'attendance_change_date',
         'clock_in_change_at',
         'clock_out_change_at',
         'remark_change',

@@ -15,6 +15,7 @@ class CreateAttendanceRestApplicationsTable extends Migration
     {
         Schema::create('attendance_rest_applications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('attendance_application_id')->constrained()->cascadeOnDelete();
             $table->foreignId('rest_application_id')->constrained()->cascadeOnDelete();
             $table->timestamp('approval_at')->nullable();
