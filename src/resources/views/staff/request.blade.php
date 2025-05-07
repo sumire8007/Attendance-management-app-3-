@@ -33,7 +33,7 @@
                             <td>{{ $waitingApproval->attendanceApplication->remark_change }}</td>
                             <td>{{ \Carbon\Carbon::parse($waitingApproval->created_at)->format('Y/m/d') }}</td>
                             <td>
-                                <a href="/attendance/{{ $waitingApproval->attendanceApplication->id }}">詳細</a>
+                                <a href="/attendance/{{ $waitingApproval->attendanceApplication->attendance_id }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach
@@ -67,7 +67,7 @@
                             <td>{{ $approval->attendanceApplication->remark_change }}</td>
                             <td>{{ \Carbon\Carbon::parse($waitingApproval->created_at)->format('Y/m/d') }}</td>
                             <td>
-                                <a href="/attendance/{{ $approval->attendanceApplication->id }}">詳細</a>
+                                <a href="/attendance/{{ $approval->attendanceApplication->attendance_id }}">詳細</a>
                             </td>
                         </tr>
                     @endforeach

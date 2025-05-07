@@ -101,15 +101,24 @@ class StaffController extends Controller
         ->with('rest')
         ->get();
         //承認待ち用
-        $attendanceApplicationDate = AttendanceApplication::where('attendance_id', $id)->first();
-        
-        // $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)->with('restApplication')->get();
+        $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
+        // dd($attendanceApplicationDateId);
+        if(!empty($attendanceApplicationDateId)){
+            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+                ->with('attendanceApplication', 'user')
+                ->first();
+            // dd($attendanceApplicationDate);
 
-
-        return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates'));
+            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+                ->with('restApplication')
+                ->get();
+            // dd($restApplicationDates);
+            return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId','attendanceApplicationDate', 'restApplicationDates'));
+        }
+        return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates', 'attendanceApplicationDateId'));
     }
     // 勤怠を修正
-    public function application(Request $request)
+    public function application(ApplicationRequest $request)
     {
         $attendanceDate = Attendance::where('id',$request->attendance_id)->value('attendance_date');
         $attendanceApplication = AttendanceApplication::create([
@@ -160,7 +169,6 @@ class StaffController extends Controller
         $approvals = AttendanceRestApplication::whereNotNull('approval_at')
             ->with('attendanceApplication', 'restApplication', 'user')
             ->get();
-
         return view('staff.request' ,compact('waitingApprovals','approvals'));
     }
     //出勤

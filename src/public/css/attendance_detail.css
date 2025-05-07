@@ -1,6 +1,7 @@
 .attendance_group {
     width: 700px;
     margin: 0 auto;
+    margin-bottom: 30px;
 }
 
 .attendance_title,
@@ -85,3 +86,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     top: 0;
     width: auto;
 } */
+.error-message {
+    display: block;
+    font-size: 15px;
+    height: 40px;
+}
+.waiting-approval-message {
+    text-align: right;
+    color: red;
+}
