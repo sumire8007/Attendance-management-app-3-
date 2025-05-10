@@ -58,12 +58,33 @@ class AdminController extends Controller
         return view('admin.admin_attendance_list' ,compact('date','prevMonth','nextMonth','attendanceDates'));
     }
     //勤怠詳細
-    public function attendanceDetail()
+    public function attendanceDetail($id)
     {
+        //修正画面用
+        $attendanceDates = Attendance::where('id', $id)->with('user')->first();
+        $date = Carbon::parse($attendanceDates->attendance_date);
+        $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
+        $out = $attendanceDates->clock_out_at ? Carbon::parse($attendanceDates->clock_out_at)->format('H:i') : '-- : --';
+        $restDates = AttendanceRest::where('attendance_id', $id)
+            ->with('rest')
+            ->get();
+        //承認待ち用
+        $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
+        if (!empty($attendanceApplicationDateId)) {
+            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+                ->with('attendanceApplication', 'user')
+                ->first();
 
-        
-        return view('admin.admin_attendance_detail');
+            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+                ->with('restApplication')
+                ->get();
+            return view('admin.admin_attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId', 'attendanceApplicationDate', 'restApplicationDates'));
+        }
+        return view('admin.admin_attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId'));
     }
+
+
+
     //スタッフ一覧表示
     public function staffList()
     {

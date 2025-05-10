@@ -102,17 +102,14 @@ class StaffController extends Controller
         ->get();
         //承認待ち用
         $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
-        // dd($attendanceApplicationDateId);
         if(!empty($attendanceApplicationDateId)){
             $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
                 ->with('attendanceApplication', 'user')
                 ->first();
-            // dd($attendanceApplicationDate);
 
             $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
                 ->with('restApplication')
                 ->get();
-            // dd($restApplicationDates);
             return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId','attendanceApplicationDate', 'restApplicationDates'));
         }
         return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates', 'attendanceApplicationDateId'));

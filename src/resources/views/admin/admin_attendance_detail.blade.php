@@ -4,49 +4,159 @@
 @endsection
 
 @section('content')
+    @if (empty($attendanceApplicationDateId))
+        <div class="attendance_group">
+            <div class="attendance_title">
+                <h2>勤怠詳細</h2>
+            </div>
+            <form action="/attendance/application" method="post">
+                @csrf
+                <input type="hidden" name="attendance_id" value="{{ $attendanceDates->id }}">
+                <div class="attendance_table">
+                    <table>
+                        <tr>
+                            <th>名前</th>
+                            <td>{{ $attendanceDates->user->name }}</td>
+                        </tr>
+                        <tr>
+                            <th>日付</th>
+                            <td>{{ $date->year . '年' . $date->month . '月' . $date->day . '日' }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>出勤・退勤</th>
+                            <td>
+                                @error('clock_in_change_at')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                @error('clock_out_change_at')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                <input type="time"  name="clock_in_change_at" value="{{ $in }}">
+                                <p>~</p>
+                                <input type="time" name="clock_out_change_at" value="{{ $out }}">
+                            </td>
+                        </tr>
+                        @foreach($restDates as $restDate)
+                            <input type="hidden" name="rest_id[]" value="{{ $restDate->rest->id }}">
+                            <tr>
+                                <th>休憩</th>
+                                <td>
+                                    @error('rest_in_at.*')
+                                        <span class="error-message">{{ $message }}</span>
+                                    @enderror
+                                    @error('rest_out_at.*')
+                                        <span class="error-message">{{ $message }}</span>
+                                    @enderror
 
-    <div class="attendance_group">
-        <div class="attendance_title">
-            <h2>勤怠詳細</h2>
+                                    <input type="time" name="rest_in_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
+                                    <p>~</p>
+                                    <input type="time" name="rest_out_at[]" value="{{ $restDate->rest->rest_out_at ? \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') : ''}}">
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr>
+                            <th>休憩</th>
+                            <td>
+                                @error('rest_in_at.*')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                @error('rest_out_at.*')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                <input type="time" name="rest_in_at[]" value="">
+                                <p>~</p>
+                                <input type="time" name="rest_out_at[]" value="">
+                                <input type="hidden" name="rest_id[]" value="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>備考</th>
+                            <td class="textarea">
+                                @error('remark_change')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                <textarea name="remark_change"  cols="20" rows="3">{{ $attendanceDates->remark }}</textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="attendance_correction_button">
+                    <button>修正</button>
+                </div>
+            </form>
         </div>
-        <form action="" method="">
-            <div class="attendance_table">
-                <table>
-                    <tr>
-                        <th>名前</th>
-                        <td>西伶奈</td>
-                    </tr>
-                    <tr>
-                        <th>日付</th>
-                        <td>2023年6月1日</td>
-                    </tr>
-                    <tr>
-                        <th>出勤・退勤</th>
-                        <td>
-                            <input type="text"  name="" value="9:00">
-                            <p>~</p>
-                            <input type="text" name="" value="18:00">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>休憩</th>
-                        <td>
-                            <input type="text" name="" value="12:00">
-                            <p>~</p>
-                            <input type="text" name="" value="13:00">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>備考</th>
-                        <td class="textarea">
-                            <textarea name=""  cols="20" rows="3">電車遅延のため。</textarea>
-                        </td>
-                    </tr>
-                </table>
+    @elseif(isset($attendanceApplicationDateId))
+        <div class="attendance_group">
+            <div class="attendance_title">
+                <h2>勤怠詳細</h2>
             </div>
-            <div class="attendance_correction_button">
-                <button>修正</button>
-            </div>
-        </form>
-    </div>
+            <form action="/attendance/application" method="post">
+                @csrf
+                <input type="hidden" name="attendance_id" value="{{ $attendanceDates->id }}">
+                <div class="attendance_table">
+                    <table>
+                        <tr>
+                            <th>名前</th>
+                            <td>
+                                <p>{{ $attendanceApplicationDate->user->name }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>日付</th>
+                            <td>
+                            <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'm' . '月' . 'd' . '日') }}</p>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>出勤・退勤</th>
+                            <td>
+                                <input type="time" name="clock_in_change_at" value="{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_in_change_at)->format('H:i') }}">
+                                <p>~</p>
+                                <input type="time" name="clock_out_change_at" value="{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_out_change_at)->format('H:i') }}">
+                            </td>
+                        </tr>
+                        @foreach($restApplicationDates as $restApplication)
+                                <tr>
+                                    <th>休憩</th>
+                                    <td>
+                                        <input type="time" value="{{ \Carbon\Carbon::parse($restApp->rest_in_change_at)->format('H:i') }}"></input>
+                                        <p>~</p>
+                                        <input type="time" value="{{ \Carbon\Carbon::parse($restApp->rest_out_change_at)->format('H:i') }}">
+                                    </td>
+                                </tr>
+                        @endforeach
+                        <tr>
+                            <th>休憩</th>
+                            <td>
+                                @error('rest_in_at.*')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                @error('rest_out_at.*')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                <input type="time" name="rest_in_at[]" value="">
+                                <p>~</p>
+                                <input type="time" name="rest_out_at[]" value="">
+                                <input type="hidden" name="rest_id[]" value="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>備考</th>
+                            <td class="textarea">
+                                @error('remark_change')
+                                    <span class="error-message">{{ $message }}</span>
+                                @enderror
+                                <textarea name="remark_change" cols="20" rows="3">{{ $attendanceApplicationDate->attendanceApplication->remark_change }}</textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="attendance_correction_button">
+                    <button>修正</button>
+                </div>
+        </div>
+    @endif
+
 @endsection

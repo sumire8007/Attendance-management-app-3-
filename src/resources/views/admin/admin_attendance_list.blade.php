@@ -39,7 +39,7 @@
                         <td>{{ $attendanceDate['clock_out_at'] }}</td>
                         <td>{{ $attendanceDate['rest_total'] }}</td>
                         <td>{{ $attendanceDate['total'] }}</td>
-                        <td><a href="/attendance/{{ $attendanceDate['id'] }}">詳細</a></td>
+                        <td><a href="/admin/attendance/{{ $attendanceDate['id'] }}">詳細</a></td>
                     </tr>
                 @endforeach
 
