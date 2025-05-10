@@ -26,21 +26,42 @@ class AdminController extends Controller
         $now = Carbon::now();
         $date = Carbon::createFromDate($year ?? now()->year, $month ?? now()->month, $day ?? now()->day);
         $users = User::all();
-        $attendances = Attendance::whereDate('attendance_date', $date)->get();
-        $rests = Rest::whereDate('rest_date', $date)->get();
-        $restTotals = $rests->groupBy(function ($restsForDay) {
-            return $restsForDay->sum('rest_total');
-        });
+        $attendances = Attendance::whereDate('attendance_date', $date)->with('user')->get();
 
+        $rests = collect();
+        foreach($attendances as $attendance){
+            $restDates = AttendanceRest::where('attendance_id', $attendance->id)->with('rest')->get();
+            $rests = $rests->merge($restDates);
+        }
+        $restTotals = $rests->groupBy('attendance_id')->map(function ($group) {
+            return $group->sum(function ($items) {
+                return optional($items->rest)->rest_total ?? null;
+            });
+        });
+        $attendanceDates = [];
+
+        foreach($attendances as $attendance){
+            $restSum = $restTotals[$attendance->id] ?? 0;
+            $work = $attendance->attendance_total !== null ? $attendance->attendance_total - $restSum : null;
+
+            $attendanceDates[] = [
+                'name' => $attendance->user->name,
+                'clock_in_at' => $attendance->clock_in_at ? Carbon::parse($attendance->clock_in_at)->format('H:i') : '-',
+                'clock_out_at' => $attendance->clock_out_at ? Carbon::parse($attendance->clock_out_at)->format('H:i') : '-' ,
+                'rest_total' => sprintf('%02d:%02d', intdiv($restSum, 60), $restSum % 60),
+                'total' => sprintf('%02d:%02d', intdiv($work, 60), $work % 60),
+                'id' => $attendance->id,
+            ];
+        }
         $prevMonth = $date->copy()->subDay();
         $nextMonth = $date->copy()->addDay();
-        // dd($rests);
-        
-        return view('admin.admin_attendance_list' ,compact('date','prevMonth','nextMonth'));
+        return view('admin.admin_attendance_list' ,compact('date','prevMonth','nextMonth','attendanceDates'));
     }
     //勤怠詳細
     public function attendanceDetail()
     {
+
+        
         return view('admin.admin_attendance_detail');
     }
     //スタッフ一覧表示

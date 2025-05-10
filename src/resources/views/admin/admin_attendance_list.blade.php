@@ -17,7 +17,7 @@
                 <p>{{ $date->format('Y/m/d') }}</p>
             </div>
             <span>
-                <a href="{{ url('admin/attendance/list', ['year' => $nextMonth->year, 'month' => $nextMonth->month , $nextMonth->day]) }}">翌日→</a>
+                <a href="{{ url('admin/attendance/list', ['year' => $nextMonth->year, 'month' => $nextMonth->month , 'day' => $nextMonth->day]) }}">翌日→</a>
             </span>
         </div>
 
@@ -32,35 +32,17 @@
                     <th>詳細</th>
                 </tr>
 
-
                 @foreach($attendanceDates as $attendanceDate)
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><a href=""></a>詳細</td>
-                </tr>
+                    <tr>
+                        <td>{{ $attendanceDate['name'] ?? '-' }}</td>
+                        <td>{{ $attendanceDate['clock_in_at'] }}</td>
+                        <td>{{ $attendanceDate['clock_out_at'] }}</td>
+                        <td>{{ $attendanceDate['rest_total'] }}</td>
+                        <td>{{ $attendanceDate['total'] }}</td>
+                        <td><a href="/attendance/{{ $attendanceDate['id'] }}">詳細</a></td>
+                    </tr>
                 @endforeach
 
-
-                <tr>
-                    <td>山田太郎</td>
-                    <td>9:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/admin/attendance/id">詳細</a></td>
-                </tr>
-                <tr>
-                    <td>西伶奈</td>
-                    <td>9:00</td>
-                    <td>18:00</td>
-                    <td>1:00</td>
-                    <td>8:00</td>
-                    <td><a href="/admin/attendance/id">詳細</a></td>
-                </tr>
             </table>
         </div>
     </div>

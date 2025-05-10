@@ -161,14 +161,17 @@ class StaffController extends Controller
     }
     //申請一覧の表示
     public function requestListView(){
+        $user = Auth::user();
         //承認待ちのデータ
-        $waitingApprovals = AttendanceRestApplication::whereNull('approval_at')
+        $waitingApprovals = AttendanceRestApplication::where('user_id',$user->id)
+        ->whereNull('approval_at')
         ->with('attendanceApplication','restApplication','user')
         ->get();
         //承認済みのデータ
-        $approvals = AttendanceRestApplication::whereNotNull('approval_at')
-            ->with('attendanceApplication', 'restApplication', 'user')
-            ->get();
+        $approvals = AttendanceRestApplication::where('user_id',$user->id)
+        ->whereNotNull('approval_at')
+        ->with('attendanceApplication', 'restApplication', 'user')
+        ->get();
         return view('staff.request' ,compact('waitingApprovals','approvals'));
     }
     //出勤
