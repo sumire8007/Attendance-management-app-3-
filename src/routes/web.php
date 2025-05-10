@@ -39,7 +39,7 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
 // });
 // ログイン後の画面表示(管理者のみ)
 // Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
-    Route::get('/admin/attendance/list', [AdminController::class, 'attendanceList']);
+    Route::get('/admin/attendance/list/{year?}/{month?}/{day?}', [AdminController::class, 'attendanceList']);
     Route::get('/admin/staff/list', [AdminController::class, 'staffList']);
     Route::get('/admin/attendance/staff/id', [AdminController::class, 'staffAttendanceList']);
     Route::get('admin/attendance/id', [AdminController::class, 'attendanceDetail']);

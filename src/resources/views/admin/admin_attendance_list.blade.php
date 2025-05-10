@@ -6,15 +6,18 @@
 @section('content')
     <div class="attendance_group">
         <div class="attendance_title">
-            <h2>2023年6月1日の勤怠</h2>
+            <h2>{{ $date->year . '年' . $date->month . '月' . $date->day . '日' }}の勤怠</h2>
         </div>
         <div class="attendance_day">
             <span>
-                <p>←前月</p>
+                <a href="{{ url('admin/attendance/list', ['year' => $prevMonth->year, 'month' => $prevMonth->month, 'day' => $prevMonth->day]) }}">←前日</a>
             </span>
-            <p>📅2023/6/1</p>
+            <div class="attendance_sub-title">
+                <img class="calendar-icon" src="{{ asset('img/calendar.jpeg') }}" alt="カレンダー">
+                <p>{{ $date->format('Y/m/d') }}</p>
+            </div>
             <span>
-                <p>翌月→</p>
+                <a href="{{ url('admin/attendance/list', ['year' => $nextMonth->year, 'month' => $nextMonth->month , $nextMonth->day]) }}">翌日→</a>
             </span>
         </div>
 
@@ -28,6 +31,20 @@
                     <th>合計</th>
                     <th>詳細</th>
                 </tr>
+
+
+                @foreach($attendanceDates as $attendanceDate)
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a href=""></a>詳細</td>
+                </tr>
+                @endforeach
+
+
                 <tr>
                     <td>山田太郎</td>
                     <td>9:00</td>
