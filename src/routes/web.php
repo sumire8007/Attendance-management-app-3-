@@ -41,7 +41,7 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
 // Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     Route::get('/admin/attendance/list/{year?}/{month?}/{day?}', [AdminController::class, 'attendanceList']);
     Route::get('/admin/staff/list', [AdminController::class, 'staffList']);
-    Route::get('/admin/attendance/staff/id', [AdminController::class, 'staffAttendanceList']);
+    Route::get('/admin/attendance/staff/{id?}/{year?}/{month?}', [AdminController::class, 'staffAttendanceList']);
     Route::get('admin/attendance/{id?}', [AdminController::class, 'attendanceDetail']);
     Route::get('/admin/stamp_correction_request/list', [AdminController::class, 'requestList']);
     Route::get('/admin/stamp_correction_request/approve/', [AdminController::class, 'approval']);

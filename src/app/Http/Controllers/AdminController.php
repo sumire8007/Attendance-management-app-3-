@@ -83,8 +83,6 @@ class AdminController extends Controller
         return view('admin.admin_attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId'));
     }
 
-
-
     //スタッフ一覧表示
     public function staffList()
     {
@@ -92,9 +90,69 @@ class AdminController extends Controller
         return view('admin.admin_staff_list',compact('users'));
     }
     //スタッフ別勤怠月次一覧
-    public function staffAttendanceList()
+    public function staffAttendanceList($id = null , $year = null ,$month = null)
     {
-        return view('admin.admin_staff_attendance_list');
+        $user = User::where('id', $id)->first();
+        $userId = $user->id;
+        $date = Carbon::createFromDate($year ?? now()->year, $month ?? now()->month);
+        $prevMonth = $date->copy()->subMonth();
+        $nextMonth = $date->copy()->addMonth();
+
+        // 指定月の開始日と終了日を取得
+        $startOfMonth = $date->copy()->startOfMonth();
+        $endOfMonth = $date->copy()->endOfMonth();
+        // 月の日付を1日ずつリストに入れる　　$dates = collect();は$dateの中は配列になるような箱を用意
+        $dates = collect();
+        foreach ($startOfMonth->toPeriod($endOfMonth) as $day) {
+            $dates->push($day->copy());
+        }
+        // ログインしているユーザーの勤怠データのうち、パラメーターで指定された年月の1日〜30日までを$attendancesに格納
+        $attendances = Attendance::where('user_id', $userId)
+            ->whereBetween('attendance_date', [$startOfMonth, $endOfMonth])
+            ->get()
+            ->keyBy('attendance_date');
+        $rests = Rest::where('user_id', $userId)
+            ->whereBetween('rest_date', [$startOfMonth, $endOfMonth])
+            ->get();
+        $restTotals = $rests->groupBy(function ($rest) {
+            return Carbon::parse($rest->rest_date)->format('Y-m-d');
+        })->map(function ($restsForDay) {
+            return $restsForDay->sum('rest_total');
+        });
+
+        // 日付ごとにデータを整形　map()はlaravel collectionの繰り返しメソッド
+        $attendanceDate = $dates->map(function ($day) use ($attendances, $restTotals) {
+            // $attendancesの中からその日の日付を探す、無ければエラーを返すのではなくnullを格納
+            $record = $attendances[$day->format('Y-m-d')] ?? null;
+            $dateKey = $day->format('Y-m-d');
+            // $record中がnull,その日のデータが無いときnull,あったらその日のデータ（clock_in_at,clock_out_atを格納）
+            $in = $record && $record->clock_in_at ? Carbon::parse($record->clock_in_at)->format('H:i') : null;
+            $out = $record && $record->clock_out_at ? Carbon::parse($record->clock_out_at)->format('H:i') : null;
+            $restMinutes = $restTotals[$dateKey] ?? 0;
+            $restTotal = sprintf('%02d:%02d', intdiv($restMinutes, 60), $restMinutes % 60);
+            $attendanceTotal = $record && $record->attendance_total ?
+                ($record->attendance_total) - $restMinutes : null;
+            $total = sprintf('%02d:%02d', intdiv($attendanceTotal, 60), $attendanceTotal % 60);
+            $dateId = $record ? $record->id : null;
+            return [
+                'date' => $day,
+                'clock_in_at' => $in,
+                'clock_out_at' => $out,
+                'rest_total' => $restTotal,
+                'work' => $total,
+                'id' => $dateId,
+            ];
+        });
+        return view('admin.admin_staff_attendance_list', [
+            'user' => $user,
+            'date' => $date,
+            'attendanceDate' => $attendanceDate,  //表示用の勤怠情報（日別）
+            'currentDate' => $date,  //今表示している月
+            'prevMonth' => $date->copy()->subMonth(), //今表示している月の1ヶ月前
+            'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
+        ]);
+
+        // return view('admin.admin_staff_attendance_list' , compact('user','date'));
     }
     //申請一覧表示
     public function requestList()

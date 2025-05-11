@@ -19,7 +19,14 @@
     border-left: solid 8px black;
     padding-left: 20px;
 }
-
+.calendar-icon {
+    width: 30px;
+    height: 30px;
+    margin-top: 10px;
+}
+.attendance_sub-title{
+    display: flex;
+}
 .attendance_day {
     display: flex;
     justify-content: space-between;
