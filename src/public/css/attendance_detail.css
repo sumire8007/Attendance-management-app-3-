@@ -56,19 +56,6 @@ textarea {
     border: solid #F0Eff0 1px;
     border-radius: 3px;
 }
-.attendance_correction_button {
-    text-align: right;
-}
-.attendance_correction_button button{
-    width: 100px;
-    background-color: black;
-    color: white;
-    margin-top: 20px;
-    border-radius: 5px;
-    height: 30px;
-    border: none;
-    cursor: pointer;
-}
 
 input[type="time"]::-webkit-calendar-picker-indicator {
     background: none;

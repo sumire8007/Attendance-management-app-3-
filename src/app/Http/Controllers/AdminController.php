@@ -157,12 +157,28 @@ class AdminController extends Controller
     //申請一覧表示
     public function requestList()
     {
-        return view('admin.admin_request_list');
+        //承認待ちのデータ
+        $waitingApprovals = AttendanceRestApplication::whereNull('approval_at')
+            ->with('attendanceApplication', 'restApplication', 'user')
+            ->get();
+        //承認済みのデータ
+        $approvals = AttendanceRestApplication::whereNotNull('approval_at')
+            ->with('attendanceApplication', 'restApplication', 'user')
+            ->get();
+        return view('admin.admin_request_list', compact('waitingApprovals', 'approvals'));
     }
     //修正承認画面表示
-    public function approval()
+    public function approval($id =  null)
     {
-        return view('admin.admin_approval');
+        $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
+            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+                ->with('attendanceApplication', 'user')
+                ->first();
+
+            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+                ->with('restApplication')
+                ->get();
+            return view('admin.admin_approval', compact( 'attendanceApplicationDateId', 'attendanceApplicationDate', 'restApplicationDates'));
     }
 
 }

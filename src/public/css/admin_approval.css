@@ -1,10 +1,11 @@
 .attendance_group {
     width: 700px;
     margin: 0 auto;
+    margin-bottom: 30px;
 }
 
 .attendance_title,
-.attendance_status,
+.attendance_day p,
 .attendance_table table {
     width: 100%;
 }
@@ -20,18 +21,6 @@
     padding-left: 20px;
 }
 
-.attendance_status {
-    border-bottom: solid black 1px;
-    padding-bottom: 10px;
-    margin-bottom: 30px;
-}
-
-.attendance_status a {
-    margin: 30px;
-    color: black;
-    text-decoration: none;
-}
-
 .attendance_table {
     background-color: white;
     border-radius: 10px;
@@ -39,20 +28,36 @@
 
 .attendance_table tr {
     border-bottom: solid #F0Eff0 2px;
-    line-height: 50px;
+    line-height: 60px;
 }
 
-.attendance_table th,
-td {
+.attendance_table th {
     text-align: left;
     color: #737373;
-    padding: 0 30px;
+    padding-left: 30px;
 }
 
-.attendance_table a {
-    color: black;
-    text-decoration: none;
-    font-weight: bold;
+.attendance_table p {
+    display: inline-block;
+    margin: 0 20px
+}
+
+.attendance_table input {
+    width: 100px;
+    text-align: center;
+    height: 30px;
+    font-size: 15px;
+    border: solid #F0Eff0 1px;
+    border-radius: 3px;
+}
+
+textarea {
+    width: 260px;
+    height: 60px;
+    text-align: left;
+    margin: 10px 0;
+    border: solid #F0Eff0 1px;
+    border-radius: 3px;
 }
 
 .attendance_button {

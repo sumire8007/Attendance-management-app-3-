@@ -121,9 +121,9 @@
                                 <tr>
                                     <th>休憩</th>
                                     <td>
-                                        <input type="time" value="{{ \Carbon\Carbon::parse($restApp->rest_in_change_at)->format('H:i') }}"></input>
+                                        <input type="time" value="{{ \Carbon\Carbon::parse($restApplication->rest_in_change_at)->format('H:i') }}"></input>
                                         <p>~</p>
-                                        <input type="time" value="{{ \Carbon\Carbon::parse($restApp->rest_out_change_at)->format('H:i') }}">
+                                        <input type="time" value="{{ \Carbon\Carbon::parse($restApplication->rest_out_change_at)->format('H:i') }}">
                                     </td>
                                 </tr>
                         @endforeach

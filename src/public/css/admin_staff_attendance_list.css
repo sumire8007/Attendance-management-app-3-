@@ -39,10 +39,12 @@
 .attendance_day p {
     text-align: center;
     width: 100px;
+    font-weight: bold;
 }
 
-.attendance_day span {
+.attendance_day a {
     color: #737373;
+    text-decoration: none;
 }
 
 .attendance_table {
