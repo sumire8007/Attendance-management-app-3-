@@ -44,10 +44,9 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
     Route::get('/admin/attendance/staff/{id?}/{year?}/{month?}', [AdminController::class, 'staffAttendanceList']);
     Route::get('admin/attendance/{id?}', [AdminController::class, 'attendanceDetail']);
     Route::get('/admin/stamp_correction_request/list', [AdminController::class, 'requestList']);
-Route::get('/admin/stamp_correction_request/list/approval', [AdminController::class, 'requestList']);
-    Route::get('/admin/stamp_correction_request/approve/{id?}', [AdminController::class, 'approval']);
+    Route::get('/admin/stamp_correction_request/list/approval', [AdminController::class, 'requestList']);
+    Route::get('/admin/stamp_correction_request/approve/{id?}', [AdminController::class, 'viewApproval']);
 // });
-
 
 //出退勤・休憩機能
 Route::post('/attendance', [StaffController::class, 'AddClockIn']);
@@ -57,3 +56,6 @@ Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
 
 //勤怠修正機能
 Route::post('/attendance/application', [StaffController::class, 'application']);
+
+//承認機能
+Route::post('/admin/stamp_correction_request/approve', [AdminController::class, 'approval']);

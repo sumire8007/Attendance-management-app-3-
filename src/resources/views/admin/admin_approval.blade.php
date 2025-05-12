@@ -22,7 +22,6 @@
                         <td>
                         <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'm' . '月' . 'd' . '日') }}</p>
                         </td>
-                        <td></td>
                     </tr>
                     <tr>
                         <th>出勤・退勤</th>
@@ -34,7 +33,7 @@
                     </tr>
                     @foreach($restApplicationDates as $restApplication)
                         @php
-                            $restApp = $restApplication->restApplication;
+    $restApp = $restApplication->restApplication;
                         @endphp
                         @if($restApp)
                             <tr>
@@ -61,16 +60,18 @@
                     </tr>
                 </table>
             </div>
-            @if(empty($restApplicationDates->approval_at))
-            <div class="attendance_button">
-                <form action="" method="post">
-                    @csrf
-                    <button>承認</button>
-                </form>
-            </div>
-            @elseif(isset($restApplicationDates->approval_at))
-                <div class="approved_button">
-                    承認済み
+            @if(empty($attendanceApplicationDate->approval_at))
+                <div class="attendance_button">
+                    <form action="/admin/stamp_correction_request/approve" method="post">
+                        @csrf
+                        <input type="hidden" name="attendance_application_id" value="{{ $attendanceApplicationDate->attendanceApplication->id }}">
+                        <input type="hidden" name="user_id" value="{{ $attendanceApplicationDate->user->id }}">
+                        <button>承認</button>
+                    </form>
+                </div>
+            @elseif(isset($attendanceApplicationDate->approval_at))
+                <div class="approved_message">
+                    <p>承認済み</p>
                 </div>
             @endif
     </div>

@@ -62,10 +62,10 @@
                         <tr>
                             <td>承認済み</td>
                             <td>{{ $approval->user->name }}</td>
-                            <td>{{ \Carbon\Carbon::parse($waitingApproval->attendanceApplication->attendance_change_date)->format('Y/m/d') }}
+                            <td>{{ \Carbon\Carbon::parse($approval->attendanceApplication->attendance_change_date)->format('Y/m/d') }}
                             </td>
                             <td>{{ $approval->attendanceApplication->remark_change }}</td>
-                            <td>{{ \Carbon\Carbon::parse($waitingApproval->created_at)->format('Y/m/d') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($approval->created_at)->format('Y/m/d') }}</td>
                             <td>
                                 <a href="/attendance/{{ $approval->attendanceApplication->attendance_id }}">詳細</a>
                             </td>

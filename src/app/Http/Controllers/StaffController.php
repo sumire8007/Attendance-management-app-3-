@@ -138,7 +138,7 @@ class StaffController extends Controller
                 continue;
             }
             $restDate = Rest::where('id',$restIds[$i])->value('rest_date');
-
+            dd($restDate);
             $restApplications[] = RestApplication::create([
                 'rest_id' => $restIds[$i]?? null,
                 'rest_change_date' => Carbon::parse($restDate)->format('Y-m-d'),
@@ -163,12 +163,14 @@ class StaffController extends Controller
         $waitingApprovals = AttendanceRestApplication::where('user_id',$user->id)
         ->whereNull('approval_at')
         ->with('attendanceApplication','restApplication','user')
-        ->get();
+        ->get()
+        ->unique('attendance_application_id');
         //承認済みのデータ
         $approvals = AttendanceRestApplication::where('user_id',$user->id)
         ->whereNotNull('approval_at')
         ->with('attendanceApplication', 'restApplication', 'user')
-        ->get();
+        ->get()
+        ->unique('attendance_application_id');
         return view('staff.request' ,compact('waitingApprovals','approvals'));
     }
     //出勤

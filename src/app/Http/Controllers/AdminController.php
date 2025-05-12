@@ -151,8 +151,6 @@ class AdminController extends Controller
             'prevMonth' => $date->copy()->subMonth(), //今表示している月の1ヶ月前
             'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
         ]);
-
-        // return view('admin.admin_staff_attendance_list' , compact('user','date'));
     }
     //申請一覧表示
     public function requestList()
@@ -160,15 +158,17 @@ class AdminController extends Controller
         //承認待ちのデータ
         $waitingApprovals = AttendanceRestApplication::whereNull('approval_at')
             ->with('attendanceApplication', 'restApplication', 'user')
-            ->get();
+            ->get()
+            ->unique('attendance_application_id');
         //承認済みのデータ
         $approvals = AttendanceRestApplication::whereNotNull('approval_at')
             ->with('attendanceApplication', 'restApplication', 'user')
-            ->get();
+            ->get()
+            ->unique('attendance_application_id');
         return view('admin.admin_request_list', compact('waitingApprovals', 'approvals'));
     }
     //修正承認画面表示
-    public function approval($id =  null)
+    public function viewApproval($id =  null)
     {
         $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
             $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
@@ -180,5 +180,61 @@ class AdminController extends Controller
                 ->get();
             return view('admin.admin_approval', compact( 'attendanceApplicationDateId', 'attendanceApplicationDate', 'restApplicationDates'));
     }
+    //承認機能
+    public function approval(Request $request)
+    {
+        $date = Carbon::now();
+        //承認日追加
+        AttendanceRestApplication::where('attendance_application_id', $request->attendance_application_id)->update(['approval_at' => $date]);
 
+        //元データを承認済みデータに上書き(出退勤)
+        $attendanceDate = AttendanceApplication::where('id', $request->attendance_application_id)->first();
+        Attendance::where('id',$attendanceDate->attendance_id)
+        ->first()
+        ->update([
+            'clock_in_at' => $attendanceDate->clock_in_change_at,
+            'clock_out_at' => $attendanceDate->clock_out_change_at,
+            'remark' => $attendanceDate->remark_change,
+            'attendance_total' => $attendanceDate->attendance_change_total,
+        ]);
+
+        // //元データを承認済みデータに上書き(既存の休憩データ)
+        $applicationDates = AttendanceRestApplication::where('attendance_application_id', $request->attendance_application_id)
+        ->get();
+        foreach($applicationDates as $applicationDate){
+            $restDate = RestApplication::where('id', $applicationDate->rest_application_id)
+                ->whereNotNull('rest_id')
+                ->first();
+            if(isset($restDate)){
+                Rest::where('id', $restDate->rest_id)
+                    ->first()
+                    ->update([
+                    'rest_in_at' => $restDate->rest_in_change_at,
+                    'rest_out_at' => $restDate->rest_out_change_at,
+                    'rest_total' => $restDate->rest_change_total,
+                    ]);
+            }
+        }
+
+        //元データを承認済みデータに上書き(休憩の新規分)
+        foreach($applicationDates as $applicationDate){
+            $restNewDate = RestApplication::where('id', $applicationDate->rest_application_id)
+                ->whereNull('rest_id')
+                ->first();
+            if(isset($restNewDate)){
+                $rest = Rest::create([
+                    'user_id' => $request->user_id,
+                    'rest_date' => $restNewDate->rest_change_date,
+                    'rest_in_at' => $restNewDate->rest_in_change_at,
+                    'rest_out_at' => $restNewDate->rest_out_change_at,
+                    'rest_total' => $restNewDate->rest_change_total,
+                ]);
+                AttendanceRest::create([
+                    'attendance_id' => $attendanceDate->attendance_id,
+                    'rest_id' => $rest->id,
+                ]);
+            }
+        }
+        return redirect('/admin/stamp_correction_request/approve/'.$attendanceDate->attendance_id);
+    }
 }
