@@ -138,10 +138,9 @@ class StaffController extends Controller
                 continue;
             }
             $restDate = Rest::where('id',$restIds[$i])->value('rest_date');
-            dd($restDate);
             $restApplications[] = RestApplication::create([
                 'rest_id' => $restIds[$i]?? null,
-                'rest_change_date' => Carbon::parse($restDate)->format('Y-m-d'),
+                'rest_change_date' => Carbon::parse($attendanceDate)->format('Y-m-d'),
                 'rest_in_change_at' => $restIns[$i],
                 'rest_out_change_at' => $restOuts[$i],
                 'rest_change_total' => Carbon::parse($restOuts[$i])->diffInMinutes(Carbon::parse($restIns[$i])),

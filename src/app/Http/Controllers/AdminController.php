@@ -60,7 +60,6 @@ class AdminController extends Controller
     //勤怠詳細
     public function attendanceDetail($id)
     {
-        //修正画面用
         $attendanceDates = Attendance::where('id', $id)->with('user')->first();
         $date = Carbon::parse($attendanceDates->attendance_date);
         $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
@@ -68,21 +67,53 @@ class AdminController extends Controller
         $restDates = AttendanceRest::where('attendance_id', $id)
             ->with('rest')
             ->get();
-        //承認待ち用
-        $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
-        if (!empty($attendanceApplicationDateId)) {
-            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
-                ->with('attendanceApplication', 'user')
-                ->first();
-
-            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
-                ->with('restApplication')
-                ->get();
-            return view('admin.admin_attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId', 'attendanceApplicationDate', 'restApplicationDates'));
-        }
-        return view('admin.admin_attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId'));
+        return view('admin.admin_attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates'));
     }
+    //勤怠修正
+    public function application(ApplicationRequest $request)
+    {
+        $date = Attendance::where('id', $request->attendance_id)->value('attendance_date');
+        Attendance::where('id',$request->attendance_id)
+        ->update([
+            'clock_in_at' => $request->clock_in_change_at,
+            'clock_out_at' => $request->clock_out_change_at,
+            'remark' => $request->remark_change,
+            'attendance_total' => Carbon::parse($request->clock_out_change_at)->diffInMinutes(Carbon::parse($request->clock_in_change_at)),
+        ]);
 
+        //既存の休憩データがあったら
+        $restIds = $request->input('rest_id');
+        $restIns = $request->input('rest_in_at');
+        $restOuts = $request->input('rest_out_at');
+
+        for ($i = 0; $i < count($restIns); $i++) {
+            // 入力が空の行はスキップ（例：新規行が空欄のまま送信された場合）
+            if (empty($restIns[$i]) || empty($restOuts[$i])) {
+                continue;
+            }
+            if(!empty($restIds[$i])){
+                Rest::where('id', $restIds[$i])
+                    ->update([
+                        'rest_in_at' => $restIns[$i],
+                        'rest_out_at' => $restOuts[$i],
+                        'rest_total' => Carbon::parse($restOuts[$i])->diffInMinutes(Carbon::parse($restIns[$i])),
+                    ]);
+            }elseif(empty($restIds[$i])){
+                $restDate = Rest::create([
+                    'user_id' => $request->user_id,
+                    'rest_date' => $date,
+                    'rest_in_at' => $restIns[$i],
+                    'rest_out_at' => $restOuts[$i],
+                    'rest_total' => Carbon::parse($restOuts[$i])->diffInMinutes(Carbon::parse($restIns[$i])),
+                ]);
+                AttendanceRest::create([
+                    'attendance_id' => $request->attendance_id,
+                    'rest_id' => $restDate->id,
+                ]);
+            }
+        }
+        return redirect('/admin/attendance/'.$request->attendance_id);
+    }
     //スタッフ一覧表示
     public function staffList()
     {
@@ -233,6 +264,8 @@ class AdminController extends Controller
                     'attendance_id' => $attendanceDate->attendance_id,
                     'rest_id' => $rest->id,
                 ]);
+                RestApplication::where('id',$restNewDate->id)
+                ->update(['rest_id' => $rest->id]);
             }
         }
         return redirect('/admin/stamp_correction_request/approve/'.$attendanceDate->attendance_id);

@@ -54,8 +54,10 @@ Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
 Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
 Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
 
-//勤怠修正機能
+//勤怠修正機能(スタッフ)
 Route::post('/attendance/application', [StaffController::class, 'application']);
+//勤怠修正機能(管理者)
+Route::post('/admin/attendance/application', [AdminController::class, 'application']);
 
 //承認機能
 Route::post('/admin/stamp_correction_request/approve', [AdminController::class, 'approval']);
