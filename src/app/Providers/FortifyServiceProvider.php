@@ -54,19 +54,6 @@ class FortifyServiceProvider extends ServiceProvider
                 }
             }
         });
-            //ロールが0の時/attendance'へリダイレクト、1の時/admin/attendance/listへリダイレクト
-            //GATE使わない
-
-
-
-
-
-
-
-
-
-
-
 
         // ログアウト後のリダイレクト先
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
@@ -100,50 +87,6 @@ class FortifyServiceProvider extends ServiceProvider
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());
         });
-        // ログイン処理
-        // Fortify::authenticateUsing(function ($request) {
-        //             $credentials = \App\Models\User::where('email', $request->email)->first();
-        //             if ($credentials && Hash::check($request->password, $credentials->password)) {
-        //                 Auth::guard()->login($credentials);
-        //                 return $credentials;
-        //             }
-        //         $user = Auth::user();
-        //         if ($request->is('admin/login')) {
-        //             if (Gate::allows('admin-higher', $user)) {
-        //                 $request->session()->regenerate();
-        //                 return redirect('/admin/attendance/list');
-        //             }
-        //         } elseif ($request->is('login')) {
-        //             if (Gate::allows('user-higher', $user)) {
-        //                 $request->session()->regenerate();
-        //                 return redirect('/attendance');
-        //             }
-        //         }
-        //     });
-
-        // Fortify::redirects(
-        //     'login' => function () {
-        //         if(){
-
-        //         }
-        //         return request()->is('admin/*') ? '/admin/attendance/list' : '/attendance';
-        //     },
-        // );
 
     }
 }
-
-
-// Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
-// Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
-// Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
-
-// RateLimiter::for('login', function (Request $request) {
-//     $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
-
-//     return Limit::perMinute(5)->by($throttleKey);
-// });
-
-// RateLimiter::for('two-factor', function (Request $request) {
-//     return Limit::perMinute(5)->by($request->session()->get('login.id'));
-// });

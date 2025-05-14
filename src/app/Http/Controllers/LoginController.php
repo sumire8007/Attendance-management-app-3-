@@ -62,21 +62,6 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         $creadentials = $request->only(["email", "password"]);
-        // $user = Auth::user();
-        // if($user->role == 0){
-        //     return $this->loginPipeline($request)->then(function ($request) {
-        //         return app(LoginResponse::class);
-        //     });
-
-        // }elseif($user->role == 1){
-        //     return $this->loginPipeline($request)->then(function ($request) {
-        //         return app(LoginResponse::class);
-        //     });
-
-        // }else{
-        //     return redirect('/login');
-        // }
-
         if (!Auth::attempt($creadentials)) {
             return back()->withErrors(["email" => "ログイン情報が登録されていません"])->withInput();
         }
