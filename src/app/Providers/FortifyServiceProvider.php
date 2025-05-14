@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -18,6 +19,7 @@ use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+
 
 
 class FortifyServiceProvider extends ServiceProvider
@@ -36,15 +38,36 @@ class FortifyServiceProvider extends ServiceProvider
                     if (Gate::allows('admin-higher', $user)) {
                         $request->session()->regenerate();
                         return redirect('/admin/attendance/list');
+                    } else {
+                        return redirect('/admin/login')->withErrors(["email" => "管理者のみがログインできます"]);
                     }
+
                 } elseif ($request->is('login')) {
                     if (Gate::allows('user-higher', $user)) {
                         $request->session()->regenerate();
                         return redirect('/attendance');
+                    } else {
+                        return redirect('/login')->withErrors(["email" => "スタッフのみがログインできます"]);
                     }
+                } else {
+                    return redirect('/login')->withErrors(["email" => "ログインが必要です"]);
                 }
             }
         });
+            //ロールが0の時/attendance'へリダイレクト、1の時/admin/attendance/listへリダイレクト
+            //GATE使わない
+
+
+
+
+
+
+
+
+
+
+
+
         // ログアウト後のリダイレクト先
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
             public function toResponse($request)

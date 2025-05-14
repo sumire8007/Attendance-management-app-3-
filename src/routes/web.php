@@ -16,9 +16,13 @@ use App\Http\Controllers\LoginController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// ログイン画面表示
+// ログイン画面表示(管理者)
 Route::get('/admin/login', function () {
     return view('auth.admin_login');
+});
+// ログイン画面表示(スタッフ)
+Route::get('/login', function () {
+    return view('auth.staff_login');
 });
 //会員登録
 Route::post('/register', [RegisterController::class,'store']);
@@ -30,15 +34,24 @@ Route::post('/logout', [LoginController::class, 'destroy']);
 Route::post('/admin/logout', [LoginController::class, 'destroy']);
 
 // ログイン後の画面表示(ユーザーのみ)
-// Route::group(['middleware' => ['auth', 'can:user-higher']],function(){
+Route::group(['middleware' => ['auth', 'can:user-higher']],function(){
     Route::get('/attendance', [StaffController::class, 'attendanceView']);
     Route::get('/attendance/list/{year?}/{month?}', [StaffController::class, 'attendanceListView']);
     Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
     Route::get('/stamp_correction_request/list/approval',[StaffController::class,'requestListView']);
     Route::get('/attendance/{id?}', [StaffController::class, 'attendanceDetail']);
-// });
+    //出退勤・休憩機能
+    Route::post('/attendance', [StaffController::class, 'AddClockIn']);
+    Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
+    Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
+    Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
+
+    //勤怠修正機能(スタッフ)
+    Route::post('/attendance/application', [StaffController::class, 'application']);
+
+});
 // ログイン後の画面表示(管理者のみ)
-// Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
+Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     Route::get('/admin/attendance/list/{year?}/{month?}/{day?}', [AdminController::class, 'attendanceList']);
     Route::get('/admin/staff/list', [AdminController::class, 'staffList']);
     Route::get('/admin/attendance/staff/{id?}/{year?}/{month?}', [AdminController::class, 'staffAttendanceList']);
@@ -46,18 +59,10 @@ Route::post('/admin/logout', [LoginController::class, 'destroy']);
     Route::get('/admin/stamp_correction_request/list', [AdminController::class, 'requestList']);
     Route::get('/admin/stamp_correction_request/list/approval', [AdminController::class, 'requestList']);
     Route::get('/admin/stamp_correction_request/approve/{id?}', [AdminController::class, 'viewApproval']);
-// });
+    //勤怠修正機能(管理者)
+    Route::post('/admin/attendance/application', [AdminController::class, 'application']);
 
-//出退勤・休憩機能
-Route::post('/attendance', [StaffController::class, 'AddClockIn']);
-Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
-Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
-Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);
+    //承認機能
+    Route::post('/admin/stamp_correction_request/approve', [AdminController::class, 'approval']);
+});
 
-//勤怠修正機能(スタッフ)
-Route::post('/attendance/application', [StaffController::class, 'application']);
-//勤怠修正機能(管理者)
-Route::post('/admin/attendance/application', [AdminController::class, 'application']);
-
-//承認機能
-Route::post('/admin/stamp_correction_request/approve', [AdminController::class, 'approval']);
