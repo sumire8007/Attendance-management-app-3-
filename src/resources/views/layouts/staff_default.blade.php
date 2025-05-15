@@ -25,17 +25,10 @@
                     <a class="header-nav__link-request" href="/stamp_correction_request/list">申請</a>
                 </ol>
                 <ol class="header-nav__item-logout">
-                    @if (Auth::check())
-                        <form action="/logout" method="post">
-                            @csrf
-                            <button>ログアウト</button>
-                        </form>
-                    @else
-                        <form action="/login" method="get">
-                            @csrf
-                            <button>ログイン</button>
-                        </form>
-                    @endif
+                    <form action="/logout" method="post">
+                        @csrf
+                        <button>ログアウト</button>
+                    </form>
                 </ol>
             </ul>
         </div>

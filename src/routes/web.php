@@ -23,7 +23,7 @@ Route::get('/admin/login', function () {
 // ログイン画面表示(スタッフ)
 Route::get('/login', function () {
     return view('auth.staff_login');
-});
+})->name('login');
 //会員登録
 Route::post('/register', [RegisterController::class,'store']);
 // ログイン処理

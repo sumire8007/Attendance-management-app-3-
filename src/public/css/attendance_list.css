@@ -2,7 +2,9 @@
     width: 700px;
     margin: 0 auto;
 }
-.attendance_title, .attendance_day p, .attendance_table table{
+.attendance_title,
+.attendance_day p,
+.attendance_table table{
     width: 100%;
 }
 .attendance_title {
@@ -14,6 +16,9 @@
     border-left: solid 8px black;
     padding-left: 20px;
 }
+.calendar-icon {
+    width: 25px;
+}
 .attendance_day {
     display: flex;
     justify-content: space-between;
@@ -23,6 +28,7 @@
     line-height: 20px;
 }
 .attendance_day p {
+    display: inline-block;
     text-align: center;
     width: 100px;
     font-weight: bold;

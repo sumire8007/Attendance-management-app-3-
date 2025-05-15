@@ -10,7 +10,10 @@
         </div>
         <div class="attendance_day">
             <span><a href="{{ url('/attendance/list', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">←前月</a></span>
-            <p>📅{{ $currentDate->format('Y/m') }}</p>
+            <div class="attendance_sub-title">
+                <img class="calendar-icon" src="{{ asset('img/calendar.jpeg') }}" alt="カレンダー">
+                <p>{{ $currentDate->format('Y/m') }}</p>
+            </div>
             <span><a href="{{ url('/attendance/list', ['year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">翌月→</a></span>
         </div>
 
