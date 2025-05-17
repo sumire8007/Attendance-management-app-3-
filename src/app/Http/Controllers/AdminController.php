@@ -112,7 +112,7 @@ class AdminController extends Controller
                 ]);
             }
         }
-        return redirect('/admin/attendance/'.$request->attendance_id);
+        return redirect('/admin/attendance/'.$request->attendance_id)->with('message','勤怠を修正しました!');
     }
     //スタッフ一覧表示
     public function staffList()

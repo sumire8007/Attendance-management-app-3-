@@ -38,6 +38,9 @@ img {
     text-decoration-line: none;
     color: #0173cc;
 }
+.error-message {
+    color: red;
+}
 @media screen and (max-width: 850px) {
 .login-form__content {
     margin-top: 50px;

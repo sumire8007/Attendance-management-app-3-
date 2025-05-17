@@ -8,7 +8,7 @@
     <div class="attendance_group">
         <div class="attendance_content">
             @if(session('message'))
-                <div>{{ session('message') }}</div>
+                <div class="action-message">{{ session('message') }}</div>
             @endif
             @if(empty($attendance))
                 <div class="attendance_status">勤務外</div>
@@ -20,7 +20,7 @@
                 <div class="attendance_status">退勤済み</div>
             @endif
 
-            <div class="attendance_day"> {{ $date->year . '年' . $date->month . '月' . $date->day . '日' }}</div>
+            <div class="attendance_day"> {{ $date->translatedFormat('Y年n月j日(D)') }}</div>
             <div class="attendance_time">{{ $date->format('H:i') }}</div>
 
             @if(empty($attendance))

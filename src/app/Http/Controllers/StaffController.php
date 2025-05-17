@@ -21,7 +21,7 @@ class StaffController extends Controller
 {
     //勤怠の表示
     public function attendanceView(){
-        $date = Carbon::now();
+        $date = Carbon::now()->locale('ja');
         $userId = Auth::user()->id;
         $attendance = Attendance::where('user_id', $userId)
         ->whereDate('attendance_date', $date->format('Y-m-d'))
@@ -146,11 +146,19 @@ class StaffController extends Controller
                 'rest_change_total' => Carbon::parse($restOuts[$i])->diffInMinutes(Carbon::parse($restIns[$i])),
             ]);
         }
-        foreach($restApplications as $restApplication){
+        if(count($restApplications) > 0){
+            foreach ($restApplications as $restApplication) {
+                AttendanceRestApplication::create([
+                    'user_id' => Auth::user()->id,
+                    'attendance_application_id' => $attendanceApplication->id,
+                    'rest_application_id' => $restApplication->id,
+                ]);
+            }
+        }else{
             AttendanceRestApplication::create([
                 'user_id' => Auth::user()->id,
                 'attendance_application_id' => $attendanceApplication->id,
-                'rest_application_id' => $restApplication->id,
+                'rest_application_id' => null,
             ]);
         }
         return redirect('/attendance/list');

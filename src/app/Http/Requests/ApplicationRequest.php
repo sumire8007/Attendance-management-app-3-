@@ -49,9 +49,9 @@ class ApplicationRequest extends FormRequest
             foreach($restIns as $index => $restInTime){
                 $restOutTime = $restOuts[$index] ?? null;
 
-                $restIn = Carbon::parse($restInTime) ?? null;
-                $restOut = Carbon::parse($restOutTime) ?? null;
-
+                $restIn = $restInTime ? Carbon::parse($restInTime) : null;
+                $restOut = $restOutTime ? Carbon::parse($restOutTime) : null;
+                // dd($restIn);
                 if(empty($restIn) && empty($restOut)){
                     continue;
                 }
