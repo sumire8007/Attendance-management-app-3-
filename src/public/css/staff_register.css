@@ -10,6 +10,8 @@ img {
     margin: 0 auto;
     width: 500px;
     text-align: center;
+    margin-top: 100px;
+    margin-bottom: 50px;
 }
 .form__group-title {
     text-align: left;
@@ -36,4 +38,9 @@ img {
     margin-top: 20px;
     text-decoration-line: none;
     color: #0173cc;
+}
+@media screen and (max-width: 850px) {
+    .register-form__content {
+        margin-top: 50px;
+    }
 }

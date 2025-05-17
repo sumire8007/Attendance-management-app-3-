@@ -27,10 +27,7 @@
                         <tr>
                             <th>出勤・退勤</th>
                             <td>
-                                @error('clock_in_change_at')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                                @error('clock_out_change_at')
+                                @error("clock_in_change_at")
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 <input type="time"  name="clock_in_change_at" value="{{ $in }}">
@@ -38,31 +35,28 @@
                                 <input type="time" name="clock_out_change_at" value="{{ $out }}">
                             </td>
                         </tr>
-                        @foreach($restDates as $restDate)
+                        @foreach($restDates as $index => $restDate)
                             <input type="hidden" name="rest_id[]" value="{{ $restDate->rest->id }}">
                             <tr>
-                                <th>休憩</th>
+                                <th>休憩{{ $index + 1 }}</th>
                                 <td>
-                                    @error('rest_in_at.*')
-                                        <span class="error-message">{{ $message }}</span>
-                                    @enderror
-                                    @error('rest_out_at.*')
+                                    @error("rest_in_at.$index")
                                         <span class="error-message">{{ $message }}</span>
                                     @enderror
 
                                     <input type="time" name="rest_in_at[]" value="{{ \Carbon\Carbon::parse($restDate->rest->rest_in_at)->format('H:i') }}">
                                     <p>~</p>
-                                    <input type="time" name="rest_out_at[]" value="{{ $restDate->rest->rest_out_at ? \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') : ''}}">
+                                    <input type="time" name="rest_out_at[]" value="{{ $restDate->rest->rest_out_at ? \Carbon\Carbon::parse($restDate->rest->rest_out_at)->format('H:i') : '' }}">
                                 </td>
                             </tr>
                         @endforeach
+                        @php
+                        $restDateIndex = count($restDates)
+                        @endphp
                         <tr>
-                            <th>休憩</th>
+                            <th>休憩 {{ $restDateIndex + 1 }}</th>
                             <td>
-                                @error('rest_in_at.*')
-                                    <span class="error-message">{{ $message }}</span>
-                                @enderror
-                                @error('rest_out_at.*')
+                                @error("rest_in_at.$restDateIndex")
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 <input type="time" name="rest_in_at[]" value="">
@@ -74,7 +68,7 @@
                         <tr>
                             <th>備考</th>
                             <td class="textarea">
-                                @error('remark_change')
+                                @error("remark_change")
                                     <span class="error-message">{{ $message }}</span>
                                 @enderror
                                 <textarea name="remark_change"  cols="20" rows="3">{{ $attendanceDates->remark }}</textarea>
@@ -115,13 +109,13 @@
                                 <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_out_change_at)->format('H:i') }}</p>
                             </td>
                         </tr>
-                        @foreach($restApplicationDates as $restApplication)
+                        @foreach($restApplicationDates as $index => $restApplication)
                             @php
                                 $restApp = $restApplication->restApplication;
                             @endphp
                             @if($restApp)
                                 <tr>
-                                    <th>休憩</th>
+                                    <th>休憩{{ $index + 1 }}</th>
                                     <td>
                                         <p>{{ \Carbon\Carbon::parse($restApp->rest_in_change_at)->format('H:i') }}</p>
                                         <p>~</p>
@@ -130,8 +124,11 @@
                                 </tr>
                             @endif
                         @endforeach
+                        @php
+                        $restDateIndex = count($restApplicationDates) + 1
+                        @endphp
                         <tr>
-                            <th>休憩</th>
+                            <th>休憩{{ $restDateIndex }}</th>
                             <td>
                                 <p></p>
                             </td>

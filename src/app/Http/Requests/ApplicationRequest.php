@@ -24,38 +24,53 @@ class ApplicationRequest extends FormRequest
     public function rules()
     {
         return [
-            'clock_in_change_at' => [
-                            'required',
-                            'before:clock_out_change_at'
-                        ],
-            'clock_out_change_at' => [
-                            'required',
-                            'after:clock_in_change_at'
-                        ],
-            // 'rest_in_at.*' => [
-            //                 'before:clock_out_change_at',
-            //                 'after:clock_in_change_at',
-            //                 'before:rest_out_change_at'
-            //             ],
-            // 'rest_out_at.*' => [
-            //                 'before:clock_out_change_at',
-            //                 'after:clock_in_change_at',
-            //                 'before:rest_in_change_at'
-            //             ],
             'remark_change' => 'required',
         ];
     }
+    public function withValidator($validator){
+
+        $validator->after(function ($validator) {
+
+        //出退勤のバリデーション
+            $clockIn = Carbon::parse($this->input('clock_in_change_at'));
+            $clockOut = Carbon::parse($this->input('clock_out_change_at'));
+
+            if(empty($clockIn) || empty($clockOut)) {
+                $validator->errors()->add('clock_in_change_at', '出勤時間もしくは退勤時間が不適切な値です');
+            }
+            if ($clockIn > $clockOut) {
+                $validator->errors()->add('clock_in_change_at', '出勤時間もしくは退勤時間が不適切な値です');
+            }
+
+        //休憩時間のバリデーション
+            $restIns =$this->input('rest_in_at', []);
+            $restOuts = $this->input('rest_out_at', []);
+
+            foreach($restIns as $index => $restInTime){
+                $restOutTime = $restOuts[$index] ?? null;
+
+                $restIn = Carbon::parse($restInTime) ?? null;
+                $restOut = Carbon::parse($restOutTime) ?? null;
+
+                if(empty($restIn) && empty($restOut)){
+                    continue;
+                }
+                if (isset($restIn) || isset($restOut)) {
+
+                    if ($restIn > $restOut) {
+                        $validator->errors()->add("rest_in_at.$index", '休憩時間が不適切な値です');
+                    }
+                    if ($restIn < $clockIn || $restOut > $clockOut) {
+                        $validator->errors()->add("rest_in_at.$index", '休憩時間が勤務時間外です');
+                    }
+                }
+            }
+        });
+    }
+
     public function messages()
     {
         return [
-            'clock_in_change_at.required' => '出勤時間もしくは退勤時間が不適切な値です',
-            'clock_out_change_at.required' => '出勤時間もしくは退勤時間が不適切な値です',
-            'clock_in_change_at.before' => '出勤時間もしくは退勤時間が不適切な値です',
-            'clock_out_change_at.after' => '出勤時間もしくは退勤時間が不適切な値です',
-            // 'rest_in_at.*.before' => '休憩時間が勤務時間外です',
-            // 'rest_in_at.*.after' => '休憩時間が勤務時間外です',
-            // 'rest_out_at.*.before' => '休憩時間が勤務時間外です',
-            // 'rest_out_at.*.after' => '休憩時間が勤務時間外です',
             'remark_change.required' => '備考を記入してください',
         ];
     }

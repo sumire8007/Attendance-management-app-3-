@@ -90,6 +90,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     display: block;
     font-size: 15px;
     height: 40px;
+    color: red;
 }
 .waiting-approval-message {
     text-align: right;
