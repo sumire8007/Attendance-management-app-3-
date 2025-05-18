@@ -37,7 +37,7 @@
                         <td>{{ $date['work'] ?? '-' }}</td>
                         <td>
                             @if($date['id'])
-                            <a href="/attendance/{{ $date['id'] }}">詳細</a>
+                            <a href={{ url('/attendance', ['attendanceId' => $date['id']] ) }}>詳細</a>
                             @else
                             -
                             @endif

@@ -5,7 +5,7 @@
 
 @section('content')
 
-    @if (empty($attendanceApplicationDateId))
+    @if (empty($waitApproval))
         <div class="attendance_group">
             <div class="attendance_title">
                 <h2>勤怠詳細</h2>
@@ -81,7 +81,71 @@
                 </div>
             </form>
         </div>
-    @elseif(isset($attendanceApplicationDateId))
+    @elseif(isset($approval))
+        <div class="attendance_group">
+            <div class="attendance_title">
+                <h2>勤怠詳細</h2>
+            </div>
+                <div class="attendance_table">
+                    <table>
+                        <tr>
+                            <th>名前</th>
+                            <td>
+                                <p>{{ $attendanceApplicationDate->user->name }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>日付</th>
+                            <td>
+                            <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'm' . '月' . 'd' . '日') }}</p>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>出勤・退勤</th>
+                            <td>
+                                <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_in_change_at)->format('H:i') }}</p>
+                                <p>~</p>
+                                <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_out_change_at)->format('H:i') }}</p>
+                            </td>
+                        </tr>
+                        @foreach($restApplicationDates as $index => $restApplication)
+                            @php
+                                $restApp = $restApplication->restApplication;
+                            @endphp
+                            @if($restApp)
+                                <tr>
+                                    <th>休憩{{ $index + 1 }}</th>
+                                    <td>
+                                        <p>{{ \Carbon\Carbon::parse($restApp->rest_in_change_at)->format('H:i') }}</p>
+                                        <p>~</p>
+                                        <p>{{ \Carbon\Carbon::parse($restApp->rest_out_change_at)->format('H:i') }}</p>
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
+                        @php
+                        $restDateIndex = count($restApplicationDates) + 1
+                        @endphp
+                        <tr>
+                            <th>休憩{{ $restDateIndex }}</th>
+                            <td>
+                                <p></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>備考</th>
+                            <td class="textarea">
+                                <p>{{ $attendanceApplicationDate->attendanceApplication->remark_change }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="waiting-approval-message">
+                    <p>*承認待ちのため修正はできません。</p>
+                </div>
+        </div>
+    @elseif(isset($waitApproval))
         <div class="attendance_group">
             <div class="attendance_title">
                 <h2>勤怠詳細</h2>

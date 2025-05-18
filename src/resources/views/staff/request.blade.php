@@ -67,7 +67,7 @@
                             <td>{{ $approval->attendanceApplication->remark_change }}</td>
                             <td>{{ \Carbon\Carbon::parse($approval->created_at)->format('Y/m/d') }}</td>
                             <td>
-                                <a href="/attendance/{{ $approval->attendanceApplication->attendance_id }}">詳細</a>
+                                <a href={{ url('/attendance',['approvalId'=> $approval->id]) }}>詳細</a>
                             </td>
                         </tr>
                     @endforeach

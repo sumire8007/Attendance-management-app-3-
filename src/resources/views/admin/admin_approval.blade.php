@@ -14,26 +14,26 @@
                     <tr>
                         <th>名前</th>
                         <td>
-                            <p>{{ $attendanceApplicationDate->user->name }}</p>
+                            <p>{{ $applicationDate->user->name }}</p>
                         </td>
                     </tr>
                     <tr>
                         <th>日付</th>
                         <td>
-                        <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'm' . '月' . 'd' . '日') }}</p>
+                        <p>{{ \Carbon\Carbon::parse($applicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'm' . '月' . 'd' . '日') }}</p>
                         </td>
                     </tr>
                     <tr>
                         <th>出勤・退勤</th>
                         <td>
-                            <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_in_change_at)->format('H:i') }}</p>
+                            <p>{{ \Carbon\Carbon::parse($applicationDate->attendanceApplication->clock_in_change_at)->format('H:i') }}</p>
                             <p>~</p>
-                            <p>{{ \Carbon\Carbon::parse($attendanceApplicationDate->attendanceApplication->clock_out_change_at)->format('H:i') }}</p>
+                            <p>{{ \Carbon\Carbon::parse($applicationDate->attendanceApplication->clock_out_change_at)->format('H:i') }}</p>
                         </td>
                     </tr>
                     @foreach($restApplicationDates as $restApplication)
                         @php
-    $restApp = $restApplication->restApplication;
+                        $restApp = $restApplication->restApplication;
                         @endphp
                         @if($restApp)
                             <tr>
@@ -55,21 +55,21 @@
                     <tr>
                         <th>備考</th>
                         <td class="textarea">
-                            <p>{{ $attendanceApplicationDate->attendanceApplication->remark_change }}</p>
+                            <p>{{ $applicationDate->attendanceApplication->remark_change }}</p>
                         </td>
                     </tr>
                 </table>
             </div>
-            @if(empty($attendanceApplicationDate->approval_at))
+            @if(empty($applicationDate->approval_at))
                 <div class="attendance_button">
                     <form action="/admin/stamp_correction_request/approve" method="post">
                         @csrf
-                        <input type="hidden" name="attendance_application_id" value="{{ $attendanceApplicationDate->attendanceApplication->id }}">
-                        <input type="hidden" name="user_id" value="{{ $attendanceApplicationDate->user->id }}">
+                        <input type="hidden" name="attendance_application_id" value="{{ $applicationDate->attendanceApplication->id }}">
+                        <input type="hidden" name="user_id" value="{{ $applicationDate->user->id }}">
                         <button>承認</button>
                     </form>
                 </div>
-            @elseif(isset($attendanceApplicationDate->approval_at))
+            @elseif(isset($applicationDate->approval_at))
                 <div class="approved_message">
                     <p>承認済み</p>
                 </div>

@@ -90,29 +90,64 @@ class StaffController extends Controller
         ]);
     }
     //勤怠詳細表示
-    public function attendanceDetail($id)
+    public function attendanceDetail($attendanceId = null, $approvalId = null)
     {
         //修正画面用
-        $attendanceDates = Attendance::where('id', $id)->with('user')->first();
-        $date = Carbon::parse($attendanceDates->attendance_date);
-        $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
-        $out = $attendanceDates->clock_out_at ? Carbon::parse($attendanceDates->clock_out_at)->format('H:i') : '-- : --';
-        $restDates = AttendanceRest::where('attendance_id', $id)
-        ->with('rest')
-        ->get();
+        if($attendanceId){
+            $attendanceDates = Attendance::where('id', $attendanceId)->with('user')->first();
+            $date = Carbon::parse($attendanceDates->attendance_date);
+            $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
+            $out = $attendanceDates->clock_out_at ? Carbon::parse($attendanceDates->clock_out_at)->format('H:i') : '-- : --';
+            $restDates = AttendanceRest::where('attendance_id', $attendanceId)
+                ->with('rest')
+                ->get();
+        }
+
+        if($approvalId){
+            $attendanceApplicationDates = AttendanceApplication::where('attendance_id', $attendanceId)->get();
+            foreach ($attendanceApplicationDates as $attendanceApplicationDate) {
+                $waitApproval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
+                    ->whereNull('approval_at')
+                    ->first();
+
+                $approval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
+                    ->whereNotNull('approval_at')
+                    ->first();
+            }
+        }
+        //1回以上申請済みで承認されているデータがあるかどうか(再申請できる画面用)
+        $attendanceApplicationDates = AttendanceApplication::where('attendance_id', $attendanceId)->get();
+        foreach($attendanceApplicationDates as $attendanceApplicationDate){
+            $waitApproval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
+                ->whereNull('approval_at')
+                ->first();
+
+            $approval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
+                ->whereNotNull('approval_at')
+                ->first();
+        }
+        //既に申請したことがあるデータを持ってるの詳細
+        if(!empty($approval)){
+            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $approval->attendance_application_id)
+                ->with('attendanceApplication', 'user')
+                ->first();
+            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $approval->attendance_application_id)
+                ->with('restApplication')
+                ->get();
+            return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'waitApproval','approval', 'attendanceApplicationDate', 'restApplicationDates'));
+        }
         //承認待ち用
-        $attendanceApplicationDateId = AttendanceApplication::where('attendance_id', $id)->first();
-        if(!empty($attendanceApplicationDateId)){
-            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+        if(!empty($waitApproval)){
+            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $waitApproval->attendance_application_id)
                 ->with('attendanceApplication', 'user')
                 ->first();
 
-            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDateId->id)
+            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $waitApproval->attendance_application_id)
                 ->with('restApplication')
                 ->get();
-            return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'attendanceApplicationDateId','attendanceApplicationDate', 'restApplicationDates'));
+            return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'waitApproval','approval','attendanceApplicationDate', 'restApplicationDates'));
         }
-        return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates', 'attendanceApplicationDateId'));
+        return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates', 'waitApproval','approval'));
     }
     // 勤怠を修正
     public function application(ApplicationRequest $request)

@@ -54,7 +54,7 @@
                             </tr>
                         @endforeach
                         @php
-    $restDateIndex = count($restDates) + 1
+                            $restDateIndex = count($restDates) + 1
                         @endphp
                         <tr>
                             <th>休憩{{ $restDateIndex }}</th>
