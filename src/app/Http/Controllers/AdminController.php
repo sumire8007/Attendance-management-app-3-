@@ -201,34 +201,13 @@ class AdminController extends Controller
     //修正承認画面表示
     public function viewApproval($id =  null)
     {
-        // 承認待ちのデータ（最新の申請データ）を探す
-        // $attendanceApplicationDates = AttendanceApplication::where('attendance_id', $id)->get();
-        // foreach($attendanceApplicationDates as $attendanceApplicationDate){
-        //     $waitApproval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
-        //         ->whereNull('approval_at')
-        //         ->first();
-        // }
-
-
         $applicationDate = AttendanceRestApplication::where('id', $id)
         ->with('attendanceApplication','user')
         ->first();
-        // dd($applicationDate);
 
         $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $applicationDate->attendance_application_id)
             ->with('restApplication')
             ->get();
-        // $attendanceApplicationDate = AttendanceApplication::where('id', $applicationDate->attendance_application_id)->first();
-
-        // //承認待ちのデータがあったら
-        // if(!empty($waitApproval)){
-        //     $attendanceApplicationDate = AttendanceRestApplication::where('id', $waitApproval->id)
-        //         ->with('attendanceApplication', 'user')
-        //         ->first();
-        //     $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $waitApproval->attendance_application_id)
-        //         ->with('restApplication')
-        //         ->get();
-        // }
             return view('admin.admin_approval', compact( 'applicationDate', 'restApplicationDates'));
     }
     //承認機能

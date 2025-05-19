@@ -90,34 +90,21 @@ class StaffController extends Controller
         ]);
     }
     //勤怠詳細表示
-    public function attendanceDetail($attendanceId = null, $approvalId = null)
+    public function attendanceDetail($attendanceId = null ,$applicationId = null)
     {
         //修正画面用
-        if($attendanceId){
-            $attendanceDates = Attendance::where('id', $attendanceId)->with('user')->first();
-            $date = Carbon::parse($attendanceDates->attendance_date);
-            $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
-            $out = $attendanceDates->clock_out_at ? Carbon::parse($attendanceDates->clock_out_at)->format('H:i') : '-- : --';
-            $restDates = AttendanceRest::where('attendance_id', $attendanceId)
-                ->with('rest')
-                ->get();
-        }
-
-        if($approvalId){
-            $attendanceApplicationDates = AttendanceApplication::where('attendance_id', $attendanceId)->get();
-            foreach ($attendanceApplicationDates as $attendanceApplicationDate) {
-                $waitApproval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
-                    ->whereNull('approval_at')
-                    ->first();
-
-                $approval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
-                    ->whereNotNull('approval_at')
-                    ->first();
-            }
-        }
-        //1回以上申請済みで承認されているデータがあるかどうか(再申請できる画面用)
+        $attendanceDates = Attendance::where('id', $attendanceId)->with('user')->first();
+        $date = Carbon::parse($attendanceDates->attendance_date);
+        $in = $attendanceDates->clock_in_at ? Carbon::parse($attendanceDates->clock_in_at)->format('H:i') : '-- : --';
+        $out = $attendanceDates->clock_out_at ? Carbon::parse($attendanceDates->clock_out_at)->format('H:i') : '-- : --';
+        $restDates = AttendanceRest::where('attendance_id', $attendanceId)
+            ->with('rest')
+            ->get();
+        $approval = null;
+        $waitApproval = null;
+    //承認待ちのデータがあるのか($waitApproval)、全て承認済みか($approval)
         $attendanceApplicationDates = AttendanceApplication::where('attendance_id', $attendanceId)->get();
-        foreach($attendanceApplicationDates as $attendanceApplicationDate){
+        foreach ($attendanceApplicationDates as $attendanceApplicationDate) {
             $waitApproval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
                 ->whereNull('approval_at')
                 ->first();
@@ -126,18 +113,8 @@ class StaffController extends Controller
                 ->whereNotNull('approval_at')
                 ->first();
         }
-        //既に申請したことがあるデータを持ってるの詳細
-        if(!empty($approval)){
-            $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $approval->attendance_application_id)
-                ->with('attendanceApplication', 'user')
-                ->first();
-            $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $approval->attendance_application_id)
-                ->with('restApplication')
-                ->get();
-            return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'waitApproval','approval', 'attendanceApplicationDate', 'restApplicationDates'));
-        }
-        //承認待ち用
-        if(!empty($waitApproval)){
+        //承認待ちのデータがある時
+        if (!empty($waitApproval)) {
             $attendanceApplicationDate = AttendanceRestApplication::where('attendance_application_id', $waitApproval->attendance_application_id)
                 ->with('attendanceApplication', 'user')
                 ->first();
@@ -145,9 +122,21 @@ class StaffController extends Controller
             $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $waitApproval->attendance_application_id)
                 ->with('restApplication')
                 ->get();
-            return view('staff.attendance_detail', compact('attendanceDates', 'date', 'in', 'out', 'restDates', 'waitApproval','approval','attendanceApplicationDate', 'restApplicationDates'));
+            return view('staff.attendance_detail', compact('attendanceId','applicationId','attendanceDates', 'date', 'in', 'out', 'restDates', 'waitApproval', 'approval', 'attendanceApplicationDate', 'restApplicationDates'));
         }
-        return view('staff.attendance_detail',compact('attendanceDates','date','in','out','restDates', 'waitApproval','approval'));
+        if ($applicationId) {
+            //1回以上申請したことがあり、再申請が可能)
+            if (!empty($approval)) {
+                $attendanceApplicationDate = AttendanceRestApplication::where('id', $applicationId)
+                    ->with('attendanceApplication', 'user')
+                    ->first();
+                $restApplicationDates = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->attendance_application_id)
+                    ->with('restApplication')
+                    ->get();
+                return view('staff.attendance_detail', compact('attendanceId','applicationId', 'attendanceDates', 'date', 'in', 'out', 'restDates', 'approval', 'attendanceApplicationDate', 'restApplicationDates', 'waitApproval'));
+            }
+        }
+        return view('staff.attendance_detail', compact('attendanceId', 'applicationId','waitApproval', 'attendanceDates', 'date', 'in', 'out', 'restDates'));
     }
     // 勤怠を修正
     public function application(ApplicationRequest $request)
