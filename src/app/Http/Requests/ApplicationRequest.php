@@ -30,7 +30,6 @@ class ApplicationRequest extends FormRequest
     public function withValidator($validator){
 
         $validator->after(function ($validator) {
-
         //出退勤のバリデーション
             $clockIn = Carbon::parse($this->input('clock_in_change_at'));
             $clockOut = Carbon::parse($this->input('clock_out_change_at'));

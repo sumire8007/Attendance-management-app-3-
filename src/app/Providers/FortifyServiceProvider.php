@@ -41,7 +41,6 @@ class FortifyServiceProvider extends ServiceProvider
                     } else {
                         return redirect('/admin/login')->withErrors(["email" => "管理者のみがログインできます"]);
                     }
-
                 } elseif ($request->is('login')) {
                     if (Gate::allows('user-higher', $user)) {
                         $request->session()->regenerate();
@@ -75,7 +74,7 @@ class FortifyServiceProvider extends ServiceProvider
     {
         // 会員登録
         Fortify::createUsersUsing(CreateNewUser::class);
-        //　会員登録画面の表示
+        //会員登録画面の表示
         Fortify::registerView(function () {
             return view('auth.staff_register');
         });
@@ -87,6 +86,5 @@ class FortifyServiceProvider extends ServiceProvider
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());
         });
-
     }
 }
