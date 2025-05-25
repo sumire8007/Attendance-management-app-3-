@@ -9,12 +9,12 @@ use App\Models\User;
 
 class StaffLoginTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
     public $user;
     protected function setUp(): void
     {

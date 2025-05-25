@@ -16,12 +16,12 @@ use Carbon\Carbon;
 
 class AttendanceDetailTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
     public $user;
     public $attendance;
     protected function setUp(): void

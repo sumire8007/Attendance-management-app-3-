@@ -15,6 +15,7 @@ class RegisterTest extends TestCase
      *
      * @return void
      */
+    use RefreshDatabase;
     // 名前が入力されていない場合、「お名前を入力してください」というバリデーションメッセージが表示される
     public function testNameNone(){
         $response = $this->post('register',[

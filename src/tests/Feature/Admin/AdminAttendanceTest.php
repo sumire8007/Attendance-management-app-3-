@@ -14,17 +14,17 @@ use Carbon\Carbon;
 
 class AdminAttendanceTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
     public $admin;
     protected function setUp(): void
     {
         parent::setUp();
-        $user = $this->seed(UsersTableSeeder::class);
+        $this->seed(UsersTableSeeder::class);
         $this->admin = User::where('email','admin@example.com')->first();
         Carbon::setTestNow(Carbon::create(2025, 5, 1, 12, 00, 0));
     }

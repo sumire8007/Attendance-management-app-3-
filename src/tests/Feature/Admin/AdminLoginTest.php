@@ -9,12 +9,13 @@ use App\Models\User;
 
 class AdminLoginTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
+
     public $admin;
     protected function setUp(): void
     {

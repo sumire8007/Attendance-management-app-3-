@@ -17,12 +17,13 @@ use Carbon\Carbon;
 
 class StaffCorrectionTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
+
     public $user;
     public $admin;
     public $attendance;
@@ -168,11 +169,11 @@ class StaffCorrectionTest extends TestCase
             'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
-        $this->actingAs($this->admin);
-        $response = $this->get('/admin/stamp_correction_request/approve/1');
+        $attendanceApplication = AttendanceApplication::where('attendance_id', $this->attendance->id)->first();
+        $response = $this->actingAs($this->admin)->get('/admin/stamp_correction_request/approve/'.$attendanceApplication->id);
         $response->assertStatus(200);
         $response->assertSeeInOrder(['名前', 'テスト太郎']);
-        $response->assertSeeInOrder(['日付', '2025年05月01日']);
+        $response->assertSeeInOrder(['日付', '2025年5月1日']);
         $response->assertSeeInOrder(['出勤・退勤', '10:00', '19:00']);
         $response->assertSeeInOrder(['休憩', '13:00','14:00']);
         //管理者の申請一覧に表示されているか

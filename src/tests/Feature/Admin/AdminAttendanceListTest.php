@@ -15,12 +15,13 @@ use Carbon\Carbon;
 
 class AdminAttendanceListTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
+
     public $admin;
     public $attendance;
     public $user;

@@ -12,12 +12,13 @@ use Vtiful\Kernel\Format;
 
 class ClockInTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic feature test example.
      *
      * @return void
      */
+    use RefreshDatabase;
+
     public $user;
     protected function setUp(): void
     {
@@ -47,7 +48,7 @@ class ClockInTest extends TestCase
             'clock_in_at' => Carbon::create(2025, 5, 1,12,0,0)->format('H:i:s')
         ]);
         $response = $this->get('/attendance');
-        $response->assertSee('勤務中');
+        $response->assertSee('出勤中');
     }
     //出勤は一日一回のみできる(画面上に「出勤」ボタンが表示されない)
     public function testOnceDay()
