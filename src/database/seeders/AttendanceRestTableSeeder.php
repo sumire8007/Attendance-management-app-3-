@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\AttendanceRest;
 
-class AttendanceRestSeeder extends Seeder
+class AttendanceRestTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,7 +14,7 @@ class AttendanceRestSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i < 721; $i++){
+        for ($i = 1; $i < 721; $i++) {
             AttendanceRest::create([
                 'attendance_id' => $i,
                 'rest_id' => $i,

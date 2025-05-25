@@ -20,7 +20,7 @@
                     <tr>
                         <th>日付</th>
                         <td>
-                        <p>{{ \Carbon\Carbon::parse($applicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'm' . '月' . 'd' . '日') }}</p>
+                        <p>{{ \Carbon\Carbon::parse($applicationDate->attendanceApplication->attendance_change_date)->format('Y' . '年' . 'n' . '月' . 'j' . '日') }}</p>
                         </td>
                     </tr>
                     <tr>
