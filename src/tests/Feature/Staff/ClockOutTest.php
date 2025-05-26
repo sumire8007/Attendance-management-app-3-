@@ -36,8 +36,8 @@ class ClockOutTest extends TestCase
     {
         $attendance = Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -46,35 +46,27 @@ class ClockOutTest extends TestCase
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
         $response->assertSee('退勤');
-        Attendance::where('id',$attendance->id)->update([
-            'clock_out_at' => Carbon::create(2025, 5, 1, 18, 0, 0)->format('H:i:s')
-        ]);
+        $response = $this->post('/attendance/clockout');
         $response = $this->get('/attendance');
         $response->assertSee('退勤済');
     }
     //管理画面に退勤時刻が正確に記録されている
     public function testAttendanceTimeConfirmation()
     {
-        Attendance::create([
-            'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
-        ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
-        $response->assertSee('退勤');
-        Attendance::create([
-            'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s'),
-            'clock_out_at' => Carbon::create(2025, 5, 1, 18, 0, 0)->format('H:i:s')
-        ]);
+        $response = $this->post('/attendance/clockin');
+        $response = $this->post('/attendance/clockout');
         $response = $this->get('/attendance/list/2025/5');
-        $response->assertSee('05/01(木)');
-        $response->assertSee('18:00');
+        $response->assertSeeInOrder([
+            '05/01(木)',
+            '12:00',
+            '12:00',
+            '00:00',
+            '00:00'
+        ]);
     }
 }

@@ -12,6 +12,10 @@ use App\Models\Attendance;
 use App\Models\User;
 use App\Models\Rest;
 use App\Models\AttendanceRest;
+use Database\Seeders\UsersTableSeeder;
+use Database\Seeders\AttendanceTableSeeder;
+use Database\Seeders\AttendanceRestTableSeeder;
+use Database\Seeders\RestTableSeeder;
 use Carbon\Carbon;
 
 
@@ -32,18 +36,10 @@ class StaffCorrectionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::create([
-            'name' => 'テスト太郎',
-            'email' => 'test123@example.com',
-            'password' => bcrypt('password123'),
+        $this->seed(UsersTableSeeder::class);
+        $this->user = User::where('email', 'reina.n@coachtech.com')->first();
 
-        ]);
-        $this->admin = User::create([
-            'name' => '管理者',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password123'),
-            'role' => 1,
-        ]);
+        $this->admin = User::where('role',1)->first();
         Carbon::setTestNow(Carbon::create(2025, 5, 1, 12, 00, 0));
         $this->attendance = Attendance::create([
             'user_id' => $this->user->id,
@@ -69,7 +65,7 @@ class StaffCorrectionTest extends TestCase
     public function testAttendanceError()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/'.$this->attendance->id);
@@ -89,7 +85,7 @@ class StaffCorrectionTest extends TestCase
     public function testRestInError()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/'.$this->attendance->id);
@@ -109,7 +105,7 @@ class StaffCorrectionTest extends TestCase
     public function testRestOutError()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
@@ -129,7 +125,7 @@ class StaffCorrectionTest extends TestCase
     public function testRemarkError()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
@@ -149,7 +145,7 @@ class StaffCorrectionTest extends TestCase
     public function testApplicationCorrection()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
@@ -170,9 +166,10 @@ class StaffCorrectionTest extends TestCase
             'password' => 'password123',
         ]);
         $attendanceApplication = AttendanceApplication::where('attendance_id', $this->attendance->id)->first();
+
         $response = $this->actingAs($this->admin)->get('/admin/stamp_correction_request/approve/'.$attendanceApplication->id);
         $response->assertStatus(200);
-        $response->assertSeeInOrder(['名前', 'テスト太郎']);
+        $response->assertSeeInOrder(['名前', '西　伶奈']);
         $response->assertSeeInOrder(['日付', '2025年5月1日']);
         $response->assertSeeInOrder(['出勤・退勤', '10:00', '19:00']);
         $response->assertSeeInOrder(['休憩', '13:00','14:00']);
@@ -180,7 +177,7 @@ class StaffCorrectionTest extends TestCase
         $response = $this->get('/admin/stamp_correction_request/list');
         $response->assertSeeInOrder([
             '承認待ち',
-            'テスト太郎',
+            '西　伶奈',
             '2025/05/01',
             '電車遅延のため。',
             '2025/05/01'
@@ -190,11 +187,12 @@ class StaffCorrectionTest extends TestCase
     public function testWaitApprovalAll()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
         $response->assertStatus(200);
+        //勤怠を修正し、保存（2件）
         $response = $this->post('/attendance/application', [
             'attendance_id' => $this->attendance->id,
             'rest_id' => [$this->restDate->rest_id],
@@ -204,11 +202,30 @@ class StaffCorrectionTest extends TestCase
             'rest_out_at' => ['14:00:00'],
             'remark_change' => '電車遅延のため。'
         ]);
+        $dummyDate = Attendance::where('user_id', $this->user->id)
+            ->where('attendance_date', '2025-04-1')->first();
+        $secondDate = AttendanceRest::where('attendance_id', $dummyDate->id)->with('rest')->first();
+        $response = $this->post('/attendance/application', [
+            'attendance_id' => $dummyDate->id,
+            'rest_id' => [$secondDate->rest_id],
+            'clock_in_change_at' => '10:00:00',
+            'clock_out_change_at' => '19:00:00',
+            'rest_in_at' => ['13:00:00'],
+            'rest_out_at' => ['14:00:00'],
+            'remark_change' => '電車遅延のため。'
+        ]);
         $response = $this->get('/stamp_correction_request/list');
         $response->assertSeeInOrder([
             '承認待ち',
-            'テスト太郎',
+            '西　伶奈',
             '2025/05/01',
+            '電車遅延のため。',
+            '2025/05/01'
+        ]);
+        $response->assertSeeInOrder([
+            '承認待ち',
+            '西　伶奈',
+            '2025/04/01',
             '電車遅延のため。',
             '2025/05/01'
         ]);
@@ -217,7 +234,7 @@ class StaffCorrectionTest extends TestCase
     public function testApprovalAll()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
@@ -246,7 +263,7 @@ class StaffCorrectionTest extends TestCase
         $response = $this->get('/stamp_correction_request/list/approval');
         $response->assertSeeInOrder([
             '承認済み',
-            'テスト太郎',
+            '西　伶奈',
             '2025/05/01',
             '電車遅延のため。',
             '2025/05/01'
@@ -256,7 +273,7 @@ class StaffCorrectionTest extends TestCase
     public function testDetailTransition()
     {
         $response = $this->post('login', [
-            'email' => 'test123@example.com',
+            'email' => 'reina.n@coachtech.com',
             'password' => 'password123'
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
@@ -272,11 +289,9 @@ class StaffCorrectionTest extends TestCase
         ]);
         $response = $this->get('/stamp_correction_request/list');
         $response = $this->get('/attendance/'.$this->attendance->id);
-        $response->assertSee('2025年05月01日');
-        $response->assertSee('10:00');
-        $response->assertSee('19:00');
-        $response->assertSee('13:00');
-        $response->assertSee('14:00');
+        $response->assertSeeInOrder(['日付','2025年05月01日']);
+        $response->assertSeeInOrder(['出勤・退勤','10:00','19:00']);
+        $response->assertSee(['休憩1','13:00','14:00']);
         $response->assertSee('電車遅延のため。');
         $response->assertSee('*承認待ちのため修正はできません。');
     }

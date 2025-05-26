@@ -32,7 +32,7 @@ class ClockInTest extends TestCase
         Carbon::setTestNow(Carbon::create(2025, 5, 1, 12, 00, 0));
     }
 
-    //画面上に「出勤」ボタンが表示され、処理後に画面上に表示されるステータスが「勤務中」になる
+    //画面上に「出勤」ボタンが表示され、処理後に画面上に表示されるステータスが「出勤中」になる
     public function testClockInButton()
     {
         $response = $this->post('login', [
@@ -42,11 +42,7 @@ class ClockInTest extends TestCase
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
         $response->assertSee('出勤');
-        Attendance::create([
-            'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1,12,0,0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1,12,0,0)->format('H:i:s')
-        ]);
+        $response = $this->post('/attendance/clockIn');
         $response = $this->get('/attendance');
         $response->assertSee('出勤中');
     }
@@ -55,9 +51,9 @@ class ClockInTest extends TestCase
     {
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s'),
-            'clock_out_at' => Carbon::create(2025, 5, 1, 18, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00',
+            'clock_out_at' => '18:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -74,13 +70,8 @@ class ClockInTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        Attendance::create([
-            'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s'),
-        ]);
+        $response = $this->post('/attendance/clockIn');
         $response = $this->get('/attendance/list/2025/5');
-
         $response->assertSee('05/01(木)');
         $response->assertSee('12:00');
     }

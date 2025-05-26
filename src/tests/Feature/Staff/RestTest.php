@@ -36,8 +36,8 @@ class RestTest extends TestCase
     {
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -46,11 +46,7 @@ class RestTest extends TestCase
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
         $response->assertSee('休憩入');
-        Rest::create([
-            'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
-        ]);
+        $response = $this->post('/attendance/restin');
         $response = $this->get('/attendance');
         $response->assertSee('休憩中');
     }
@@ -59,8 +55,8 @@ class RestTest extends TestCase
     {
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -70,9 +66,9 @@ class RestTest extends TestCase
         $response = $this->get('/attendance');
         Rest::create([
             'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
-            'rest_out_at' => Carbon::create(2025, 5, 1, 14, 0, 0)->format('H:i:s'),
+            'rest_date' => '2025-05-01',
+            'rest_in_at' => '12:00:00',
+            'rest_out_at' => '13:00:00',
             'rest_total' => 60,
         ]);
         $response = $this->get('/attendance');
@@ -83,8 +79,8 @@ class RestTest extends TestCase
     {
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -94,15 +90,12 @@ class RestTest extends TestCase
         $response = $this->get('/attendance');
         $rest = Rest::create([
             'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
+            'rest_date' => '2025-05-01',
+            'rest_in_at' => '12:00:00',
         ]);
         $response = $this->get('/attendance');
         $response->assertSee('休憩戻');
-        Rest::where('id', $rest->id)->update([
-            'rest_out_at' => Carbon::create(2025, 5, 1, 14, 0, 0)->format('H:i:s'),
-            'rest_total' => 60,
-        ]);
+        $response = $this->post('/attendance/restout');
         $response = $this->get('/attendance');
         $response->assertSee('出勤中');
     }
@@ -111,8 +104,8 @@ class RestTest extends TestCase
     {
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -122,18 +115,14 @@ class RestTest extends TestCase
         $response = $this->get('/attendance');
         Rest::create([
             'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
-            'rest_out_at' => Carbon::create(2025, 5, 1, 14, 0, 0)->format('H:i:s'),
+            'rest_date' => '2025-05-01',
+            'rest_in_at' => '12:00:00',
+            'rest_out_at' => '13:00:00',
             'rest_total' => 60,
         ]);
         $response = $this->get('/attendance');
         $response->assertSee('休憩入');
-        Rest::create([
-            'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
-        ]);
+        $response = $this->post('/attendance/restin');
         $response = $this->get('/attendance');
         $response->assertSee('休憩戻');
     }
@@ -142,8 +131,8 @@ class RestTest extends TestCase
     {
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response = $this->post('login', [
             'email' => 'test123@example.com',
@@ -153,9 +142,9 @@ class RestTest extends TestCase
         $response = $this->get('/attendance');
         Rest::create([
             'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
-            'rest_out_at' => Carbon::create(2025, 5, 1, 14, 0, 0)->format('H:i:s'),
+            'rest_date' => '2025-05-01',
+            'rest_in_at' => '12:00:00',
+            'rest_out_at' => '13:00:00',
             'rest_total' => 60,
         ]);
         $response = $this->get('/attendance/list/2025/5');

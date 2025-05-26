@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth', 'can:user-higher']],function(){
     Route::get('/stamp_correction_request/list/approval',[StaffController::class,'requestListView']);
     Route::get('/attendance/{attendaceId?}/{applicationId?}', [StaffController::class, 'attendanceDetail']);
     //出退勤・休憩機能
-    Route::post('/attendance', [StaffController::class, 'AddClockIn']);
+    Route::post('/attendance/clockin', [StaffController::class, 'AddClockIn']);
     Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
     Route::post('/attendance/restin', [StaffController::class, 'AddRestIn']);
     Route::post('/attendance/restout', [StaffController::class, 'AddRestOut']);

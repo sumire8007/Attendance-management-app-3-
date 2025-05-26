@@ -64,8 +64,8 @@ class StaffAttendanceTest extends TestCase
         ]);
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
@@ -80,13 +80,13 @@ class StaffAttendanceTest extends TestCase
         ]);
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00'
         ]);
         Rest::create([
             'user_id' => $this->user->id,
-            'rest_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'rest_in_at' => Carbon::create(2025, 5, 1, 13, 0, 0)->format('H:i:s'),
+            'rest_date' => '2025-05-01',
+            'rest_in_at' => '13:00:00',
         ]);
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
@@ -101,9 +101,9 @@ class StaffAttendanceTest extends TestCase
         ]);
         Attendance::create([
             'user_id' => $this->user->id,
-            'attendance_date' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('Y-m-d'),
-            'clock_in_at' => Carbon::create(2025, 5, 1, 12, 0, 0)->format('H:i:s'),
-            'clock_out_at' => Carbon::create(2025, 5, 1, 18, 0, 0)->format('H:i:s')
+            'attendance_date' => '2025-05-01',
+            'clock_in_at' => '09:00:00',
+            'clock_out_at' => '18:00:00'
         ]);
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');

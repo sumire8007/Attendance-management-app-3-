@@ -80,7 +80,7 @@ class AdminAttendanceListTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('西　伶奈さんの勤怠');
         $response->assertSee('2025/05');
-        $response->assertSeeInOrder(['05/01','09:00','18:00','01:00','08:00']);
+        $response->assertSeeInOrder(['05/01(木)','09:00','18:00','01:00','08:00']);
     }
     //「前月」を押下した時に表示月の前月の情報が表示される
     public function testPrevMonth()

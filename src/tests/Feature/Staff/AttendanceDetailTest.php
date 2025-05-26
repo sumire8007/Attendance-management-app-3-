@@ -12,8 +12,6 @@ use App\Models\AttendanceRest;
 use Carbon\Carbon;
 
 
-
-
 class AttendanceDetailTest extends TestCase
 {
     /**
@@ -27,7 +25,7 @@ class AttendanceDetailTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create([
+        $this->user = User::create([
             'name' => 'テスト太郎',
             'email' => 'test123@example.com',
             'password' => bcrypt('password123'),
@@ -61,8 +59,6 @@ class AttendanceDetailTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        $response = $this->get('/attendance');
-        $response->assertStatus(200);
         $response = $this->get('/attendance/'.$this->attendance->id);
         $response->assertStatus(200);
         $response->assertSeeInOrder(['名前', 'テスト太郎']);
@@ -74,8 +70,6 @@ class AttendanceDetailTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        $response = $this->get('/attendance');
-        $response->assertStatus(200);
         $response = $this->get('/attendance/' . $this->attendance->id);
         $response->assertStatus(200);
         $response->assertSeeInOrder(['日付', '2025年5月1日']);
@@ -87,8 +81,6 @@ class AttendanceDetailTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        $response = $this->get('/attendance');
-        $response->assertStatus(200);
         $response = $this->get('/attendance/' . $this->attendance->id);
         $response->assertStatus(200);
         $response->assertSeeInOrder(['出勤・退勤', '09:00', '18:00']);
@@ -100,8 +92,6 @@ class AttendanceDetailTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        $response = $this->get('/attendance');
-        $response->assertStatus(200);
         $response = $this->get('/attendance/' . $this->attendance->id);
         $response->assertStatus(200);
         $response->assertSeeInOrder(['休憩1', '12:00', '13:00']);

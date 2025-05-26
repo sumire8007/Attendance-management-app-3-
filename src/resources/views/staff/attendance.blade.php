@@ -24,7 +24,7 @@
             <div class="attendance_time">{{ $date->format('H:i') }}</div>
 
             @if(empty($attendance))
-            <form action="/attendance" method="post">
+            <form action="/attendance/clockin" method="post">
                 @csrf
                 <button class="attendance_button">出勤</button>
             </form>
