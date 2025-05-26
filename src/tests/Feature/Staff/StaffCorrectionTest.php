@@ -41,6 +41,7 @@ class StaffCorrectionTest extends TestCase
 
         $this->admin = User::where('role',1)->first();
         Carbon::setTestNow(Carbon::create(2025, 5, 1, 12, 00, 0));
+        //データ①
         $this->attendance = Attendance::create([
             'user_id' => $this->user->id,
             'attendance_date' => '2025-05-01',
@@ -58,6 +59,25 @@ class StaffCorrectionTest extends TestCase
         $this->restDate = AttendanceRest::create([
             'attendance_id' => $this->attendance->id,
             'rest_id' => $rest->id,
+        ]);
+        //データ②
+        $secondAttendance = Attendance::create([
+            'user_id' => $this->user->id,
+            'attendance_date' => '2025-04-01',
+            'clock_in_at' => '09:00:00',
+            'clock_out_at' => '18:00:00',
+            'attendance_total' => 540,
+        ]);
+        $secondRest = Rest::create([
+            'user_id' => $this->user->id,
+            'rest_date' => '2025-04-01',
+            'rest_in_at' => '12:00:00',
+            'rest_out_at' => '13:00:00',
+            'rest_total' => 60,
+        ]);
+        AttendanceRest::create([
+            'attendance_id' => $secondAttendance->id,
+            'rest_id' => $secondRest->id,
         ]);
     }
 
@@ -192,7 +212,7 @@ class StaffCorrectionTest extends TestCase
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
         $response->assertStatus(200);
-        //勤怠を修正し、保存（2件）
+        //勤怠を修正し、保存データ①
         $response = $this->post('/attendance/application', [
             'attendance_id' => $this->attendance->id,
             'rest_id' => [$this->restDate->rest_id],
@@ -202,6 +222,7 @@ class StaffCorrectionTest extends TestCase
             'rest_out_at' => ['14:00:00'],
             'remark_change' => '電車遅延のため。'
         ]);
+        //勤怠を修正し、保存データ②
         $dummyDate = Attendance::where('user_id', $this->user->id)
             ->where('attendance_date', '2025-04-1')->first();
         $secondDate = AttendanceRest::where('attendance_id', $dummyDate->id)->with('rest')->first();
@@ -239,15 +260,7 @@ class StaffCorrectionTest extends TestCase
         ]);
         $response = $this->get('/attendance/' . $this->attendance->id);
         $response->assertStatus(200);
-        $date = [
-            'attendance_id' => $this->attendance->id,
-            'rest_id' => [$this->restDate->rest_id],
-            'clock_in_change_at' => '10:00:00',
-            'clock_out_change_at' => '19:00:00',
-            'rest_in_at' => ['13:00:00'],
-            'rest_out_at' => ['14:00:00'],
-            'remark_change' => '電車遅延のため。'
-        ];
+        //勤怠を修正し、保存データ①
         $response = $this->post('/attendance/application', [
             'attendance_id' => $this->attendance->id,
             'rest_id' => [$this->restDate->rest_id],
@@ -257,14 +270,35 @@ class StaffCorrectionTest extends TestCase
             'rest_out_at' => ['14:00:00'],
             'remark_change' => '電車遅延のため。'
         ]);
-        $attendanceApp = AttendanceApplication::where('attendance_id',$this->attendance->id)->first();
-        AttendanceRestApplication::where('attendance_application_id', $attendanceApp->id)
+        //勤怠を修正し、保存データ②
+        $dummyDate = Attendance::where('user_id', $this->user->id)
+            ->where('attendance_date', '2025-04-1')->first();
+        $secondDate = AttendanceRest::where('attendance_id', $dummyDate->id)->with('rest')->first();
+        $response = $this->post('/attendance/application', [
+            'attendance_id' => $dummyDate->id,
+            'rest_id' => [$secondDate->rest_id],
+            'clock_in_change_at' => '10:00:00',
+            'clock_out_change_at' => '19:00:00',
+            'rest_in_at' => ['13:00:00'],
+            'rest_out_at' => ['14:00:00'],
+            'remark_change' => '電車遅延のため。'
+        ]);
+        //申請データを承認
+        AttendanceRestApplication::whereNull('approval_at')
             ->update(['approval_at' => '2025-05-02 12:00:00']);
+        //データ①②が表示されているか
         $response = $this->get('/stamp_correction_request/list/approval');
         $response->assertSeeInOrder([
             '承認済み',
             '西　伶奈',
             '2025/05/01',
+            '電車遅延のため。',
+            '2025/05/01'
+        ]);
+        $response->assertSeeInOrder([
+            '承認済み',
+            '西　伶奈',
+            '2025/04/01',
             '電車遅延のため。',
             '2025/05/01'
         ]);
