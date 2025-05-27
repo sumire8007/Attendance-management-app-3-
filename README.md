@@ -170,8 +170,10 @@ php artisan db:seed
 
 • MySQL 8.0.26
 
-##ダミーデータ（管理者）
+## ダミーデータ（管理者）
+
   Email: admin@example.com
+  
   password: password123
   
 ## URL
