@@ -17,7 +17,6 @@ class CreateAttendanceRestsTable extends Migration
             $table->id();
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
             $table->foreignId('rest_id')->constrained()->cascadeOnDelete();
-            $table->integer('total')->nullable();
             $table->timestamps();
         });
     }
