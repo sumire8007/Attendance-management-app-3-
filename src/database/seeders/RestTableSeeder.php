@@ -24,7 +24,7 @@ class RestTableSeeder extends Seeder
             $startDate = Carbon::create(2025, 1, 1);
             $endDate = Carbon::create(2025, 4, 30);
 
-            foreach ($startDate->toPeriod($endDate) as $date)
+            foreach ($startDate->toPeriod($endDate) as $date){
                 Rest::create([
                     'user_id' => $userId,
                     'rest_date' => $date->format('Y-m-d'),
@@ -32,6 +32,7 @@ class RestTableSeeder extends Seeder
                     'rest_out_at' => '13:00',
                     'rest_total' => 60,
                 ]);
+            }
         }
     }
 }

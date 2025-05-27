@@ -20,11 +20,15 @@ class AdminAttendanceTest extends TestCase
      * @return void
      */
     use RefreshDatabase;
+    public $userNishi;
+    public $userYamada;
     public $admin;
     protected function setUp(): void
     {
         parent::setUp();
         $this->seed(UsersTableSeeder::class);
+        $this->userNishi = User::where('email', 'reina.n@coachtech.com')->first();
+        $this->userYamada = User::where('email', 'taro.y@coachtech.com')->first();
         $this->admin = User::where('email','admin@example.com')->first();
         Carbon::setTestNow(Carbon::create(2025, 5, 1, 12, 00, 0));
     }
@@ -32,30 +36,30 @@ class AdminAttendanceTest extends TestCase
     //その日になされた全ユーザーの勤怠情報が正確に確認できる
     public function testStaffAttendance()
     {
-        Attendance::create([
-                'user_id' => 2,
+        $attendance = Attendance::create([
+                'user_id' => $this->userNishi->id,
                 'attendance_date' => '2025-05-01',
                 'clock_in_at' => '09:00:00',
                 'clock_out_at' => '18:00:00',
                 'attendance_total' => 540
         ]);
         Attendance::create([
-                'user_id' => 3,
+                'user_id' => $this->userYamada->id,
                 'attendance_date' => '2025-05-01',
                 'clock_in_at' => '09:00:00',
                 'clock_out_at' => '18:00:00',
                 'attendance_total' => 540
         ]);
-        Rest::create([
-            'user_id' => 2,
+        $rest = Rest::create([
+            'user_id' => $this->userNishi->id,
             'rest_date' => '2025-05-01',
             'rest_in_at' => '12:00:00',
             'rest_out_at' => '13:00:00',
             'rest_total' => 60
         ]);
         AttendanceRest::create([
-            'attendance_id' => 1,
-            'rest_id' => 1,
+            'attendance_id' => $attendance->id,
+            'rest_id' => $rest->id,
         ]);
         $response = $this->post('admin/login', [
             'email' => 'admin123@example.com',

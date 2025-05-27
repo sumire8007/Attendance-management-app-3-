@@ -39,10 +39,39 @@ class StaffAttendanceListTest extends TestCase
     //自分の勤怠情報が全て表示されている
     public function testAttendanceList()
     {
-        $this->seed(AttendanceTableSeeder::class);
-        $this->seed(RestTableSeeder::class);
-        $this->seed(AttendanceRestTableSeeder::class);
-
+        //4月1日〜4月30日までのデータ作成
+        $startDate = Carbon::create(2025, 4, 1);
+        $endDate = Carbon::create(2025, 4, 30);
+        $attendanceList = [];
+        $restList = [];
+        foreach ($startDate->toPeriod($endDate) as $date){
+            $attendance = Attendance::create([
+                'user_id' => $this->user->id,
+                'attendance_date' => $date->format('Y-m-d'),
+                'clock_in_at' => '9:00',
+                'clock_out_at' => '18:00',
+                'remark' => '電車遅延のため。',
+                'attendance_total' => 540,
+            ]);
+            $attendanceList[] = $attendance->id;
+        }
+        foreach ($startDate->toPeriod($endDate) as $date) {
+            $rest = Rest::create([
+                'user_id' => $this->user->id,
+                'rest_date' => $date->format('Y-m-d'),
+                'rest_in_at' => '12:00',
+                'rest_out_at' => '13:00',
+                'rest_total' => 60,
+            ]);
+            $restList[] = $rest->id;
+        }
+        for ($i = 0; $i < count($attendanceList); $i++) {
+            AttendanceRest::create([
+                'attendance_id' => $attendanceList[$i],
+                'rest_id' => $restList[$i],
+            ]);
+        }
+        //表示されているか確認
         $response = $this->post('login', [
             'email' => 'reina.n@coachtech.com',
             'password' => 'password123'

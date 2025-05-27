@@ -42,7 +42,7 @@ class ClockInTest extends TestCase
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
         $response->assertSee('出勤');
-        $response = $this->post('/attendance/clockIn');
+        $response = $this->post('/attendance/clockin');
         $response = $this->get('/attendance');
         $response->assertSee('出勤中');
     }
@@ -70,7 +70,7 @@ class ClockInTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123'
         ]);
-        $response = $this->post('/attendance/clockIn');
+        $response = $this->post('/attendance/clockin');
         $response = $this->get('/attendance/list/2025/5');
         $response->assertSee('05/01(木)');
         $response->assertSee('12:00');
