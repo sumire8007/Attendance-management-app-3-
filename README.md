@@ -3,7 +3,7 @@
 **◽️Dockerビルド**
 
 ```
-git clone git@github.com:sumire8007/FleaMarket-app-test.git
+git@github.com:sumire8007/Attendance-management-app.git
 ```
 ```
 docker-compose up -d --build
@@ -64,22 +64,6 @@ cp .env.example .env
 5. MySQLコンテナから抜ける
    ```exit;```
    
-
-**◽️storage保存するため、リンクを作成**
-
-> *itemとuser画像をstorageに保存します。
-  src/storage/app/publicディレクトリ下に[items] ・　[users]ディレクトリを作成してください。*
-    
-   ```
-   mkdir src/storage/app/public/items
-   mkdir src/storage/app/public/users
-   ```
-リンクの作成
-```
-docker-compose exec php bash
-php artisan storage:link
-```
-  
 **◽️テーブルの作成(マイグレーション)**
 ```
 php artisan migrate
@@ -89,32 +73,7 @@ php artisan migrate
 ```
 php artisan db:seed
 ```
-**◽️stripe環境構築**
 
-1. .env ファイル内の# Stripe API keys以下にAPIキーを与える
-
-   公式DOCSを参照ください。
-   
-   https://docs.stripe.com/keys#reveal-an-api-secret-key-for-test-mode
-   
-   > STRIPE_PUBLISHABLE_KEY=
-   > 
-   > STRIPE_SECRET_KEY=
-   >
-3. ライブラリをインストール
-   ```
-   composer require stripe/stripe-php
-   ```
-   
-4. キャッシュをクリアし、設定を反映する
-   ```
-   php artisan config:clear
-   php artisan cache:clear
-   ```
-5. サーバーを起動
-   ```
-   php -S localhost:4242
-   ```
 
 ## PHPUnitテストの実行
 1. MySQLコンテナにアクセス後、MySQLにログイン ※パスワードは、docker-compose.ymlに記載
@@ -170,19 +129,19 @@ php artisan db:seed
 
 • MySQL 8.0.26
 
-## ダミーデータ（管理者）
-
-  Email: admin@example.com
-  
-  password: password123
-  
 ## URL
 
-・開発環境：http://login
+・開発環境：http://localhost/login
 
 ・ phpMyAdmin : http://localhost:8080/
 
-・フリマアプリホーム: http://localhost/
+・管理者ログイン: http://localhost/admin/login
+
+   > email: admin@example.com
+   > 
+   > password: password123
+
+・スタッフログイン: http://localhost/login
 
 ・ユーザー登録　: http://localhost/register
 
