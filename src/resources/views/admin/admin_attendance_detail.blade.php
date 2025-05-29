@@ -53,11 +53,11 @@
                                 </td>
                             </tr>
                         @endforeach
-                        @php
-                            $restDateIndex = count($restDates) + 1
+                        @php 
+                            $restDateIndex = count($restDates)
                         @endphp
                         <tr>
-                            <th>休憩{{ $restDateIndex }}</th>
+                            <th>休憩{{ $restDateIndex + 1}}</th>
                             <td>
                                 @error("rest_in_at.$restDateIndex")
                                     <span class="error-message">{{ $message }}</span>

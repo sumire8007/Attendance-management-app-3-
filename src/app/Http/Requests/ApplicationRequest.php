@@ -55,7 +55,6 @@ class ApplicationRequest extends FormRequest
                     continue;
                 }
                 if (isset($restIn) || isset($restOut)) {
-
                     if ($restIn > $restOut) {
                         $validator->errors()->add("rest_in_at.$index", '休憩時間が勤務時間外です');
                     }
