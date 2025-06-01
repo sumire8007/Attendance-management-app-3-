@@ -1,6 +1,6 @@
 @extends('layouts.admin_default')
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/admin_staff_attendance_list.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_staff_attendance_list.css') }}">
 @endsection
 
 @section('content')
@@ -10,16 +10,20 @@
         </div>
         <div class="attendance_day">
             <span>
-                <p><a href="{{ url('admin/attendance/staff', ['id' => $user->id, 'year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">←前月</a></p>
+                <p><a
+                        href="{{ url('/admin/attendance/staff', ['id' => $user->id, 'year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">←前月</a>
+                </p>
             </span>
             <p>
-                <div class="attendance_sub-title">
-                    <img class="calendar-icon" src="{{ asset('img/calendar.jpeg') }}" alt="カレンダー">
-                    <p>{{ $date->format('Y/m') }}</p>
-                </div>
+            <div class="attendance_sub-title">
+                <img class="calendar-icon" src="{{ asset('img/calendar.jpeg') }}" alt="カレンダー">
+                <p>{{ $date->format('Y/m') }}</p>
+            </div>
             </p>
             <span>
-                <p><a href="{{ url('admin/attendance/staff', ['id' => $user->id, 'year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">翌月→</a></p>
+                <p><a
+                        href="{{ url('/admin/attendance/staff', ['id' => $user->id, 'year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">翌月→</a>
+                </p>
             </span>
         </div>
         <div class="attendance_table">
@@ -41,9 +45,9 @@
                         <td>{{ $date['work'] ?? '-' }}</td>
                         <td>
                             @if($date['id'])
-                            <a href="/admin/attendance/{{ $date['id'] }}">詳細</a>
+                                <a href="/admin/attendance/{{ $date['id'] }}">詳細</a>
                             @else
-                            -
+                                -
                             @endif
                         </td>
                     </tr>
@@ -52,7 +56,8 @@
             </table>
         </div>
         <div class="csv_button">
-            <form action="" method="">
+            <form action="/export" method="post">
+                @csrf
                 <button>CSV出力</button>
             </form>
         </div>

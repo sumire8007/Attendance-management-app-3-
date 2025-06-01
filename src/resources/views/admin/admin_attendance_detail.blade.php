@@ -53,7 +53,7 @@
                                 </td>
                             </tr>
                         @endforeach
-                        @php 
+                        @php
                             $restDateIndex = count($restDates)
                         @endphp
                         <tr>
