@@ -301,7 +301,15 @@ class AdminController extends Controller
 
         $response = new StreamedResponse(function () use ($attendances, $restTotals, $csvHeader, $year, $month) {
             $output = fopen('php://output', 'w');
-            // fwrite($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            //BOM 文字化け
+            fwrite($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            //模範解答
+            mb_convert_variables('SJIS-win', 'UTF-8', $csvHeader);
+
+
+
             fputcsv($output, $csvHeader);
             //月の日数ループ
             $daysInMonth = Carbon::create($year, $month)->daysInMonth;

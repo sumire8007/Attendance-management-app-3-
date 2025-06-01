@@ -22,7 +22,7 @@ class AttendanceTableSeeder extends Seeder
 
         foreach($userIds as $userId){
             $startDate = Carbon::create(2025, 1, 1);
-            $endDate = Carbon::create(2025, 4, 30);
+            $endDate = Carbon::create(2025, 5, 31);
             foreach ($startDate->toPeriod($endDate) as $date){
                 Attendance::create([
                     'user_id' => $userId,
