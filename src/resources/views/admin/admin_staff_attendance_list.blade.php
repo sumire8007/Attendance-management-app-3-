@@ -36,16 +36,16 @@
                     <th>合計</th>
                     <th>詳細</th>
                 </tr>
-                @foreach($attendanceDate as $date)
+                @foreach($attendanceDates as $attendanceDate)
                     <tr>
-                        <td>{{ $date['date']->translatedFormat('m/d(D)') }}</td>
-                        <td>{{ $date['clock_in_at'] ?? '-' }}</td>
-                        <td>{{ $date['clock_out_at'] ?? '-' }}</td>
-                        <td>{{ $date['rest_total'] ?? '-' }}</td>
-                        <td>{{ $date['work'] ?? '-' }}</td>
+                        <td>{{ $attendanceDate['date']->translatedFormat('m/d(D)') }}</td>
+                        <td>{{ $attendanceDate['clock_in_at'] ?? '-' }}</td>
+                        <td>{{ $attendanceDate['clock_out_at'] ?? '-' }}</td>
+                        <td>{{ $attendanceDate['rest_total'] ?? '-' }}</td>
+                        <td>{{ $attendanceDate['work'] ?? '-' }}</td>
                         <td>
-                            @if($date['id'])
-                                <a href="/admin/attendance/{{ $date['id'] }}">詳細</a>
+                            @if($attendanceDate['id'])
+                                <a href="/admin/attendance/{{ $attendanceDate['id'] }}">詳細</a>
                             @else
                                 -
                             @endif
@@ -58,6 +58,8 @@
         <div class="csv_button">
             <form action="/export" method="post">
                 @csrf
+                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                <input type="hidden" name="date" value="{{ $date }}">
                 <button>CSV出力</button>
             </form>
         </div>

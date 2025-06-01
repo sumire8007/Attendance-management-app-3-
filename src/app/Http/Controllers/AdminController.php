@@ -15,6 +15,7 @@ use App\Models\Rest;
 use App\Models\AttendanceApplication;
 use App\Models\RestApplication;
 use App\Models\AttendanceRest;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Vtiful\Kernel\Format;
 
 
@@ -177,7 +178,7 @@ class AdminController extends Controller
         return view('admin.admin_staff_attendance_list', [
             'user' => $user,
             'date' => $date,
-            'attendanceDate' => $attendanceDate,  //表示用の勤怠情報（日別）
+            'attendanceDates' => $attendanceDate,  //表示用の勤怠情報（日別）
             'currentDate' => $date,  //今表示している月
             'prevMonth' => $date->copy()->subMonth(), //今表示している月の1ヶ月前
             'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
@@ -268,5 +269,75 @@ class AdminController extends Controller
             }
         }
         return redirect('/admin/stamp_correction_request/approve/'.$attendanceDate->id);
+    }
+    //csvダウンロード ※必要なカラム：年月日、出勤、退勤、休憩時間トータル？、勤怠時間トータル
+    public function export(Request $request)
+    {
+        $date = Carbon::parse($request->date);
+        $year = $date->year;
+        $month = $date->month;
+        $attendances = Attendance::where('user_id', $request->user_id)
+            ->whereYear('attendance_date', $year)
+            ->whereMonth('attendance_date', $month)
+            ->get()->keyBy('attendance_date');
+        $rests = Rest::where('user_id', $request->user_id)
+            ->whereYear('rest_date', $year)
+            ->whereMonth('rest_date', $month)
+            ->get();
+        $restTotals = $rests->groupBy(function ($rest) {
+            return Carbon::parse($rest->rest_date)->format('Y-m-d');
+        })->map(function ($restsForDay) {
+            return $restsForDay->sum('rest_total');
+        });
+        $csvHeader = [
+            '日付',
+            '出勤時間',
+            '退勤時間',
+            '休憩合計',
+            '勤務時間合計',
+            '作成日',
+            '更新日'
+        ];
+
+        $response = new StreamedResponse(function () use ($attendances, $restTotals, $csvHeader, $year, $month) {
+            $output = fopen('php://output', 'w');
+            // fwrite($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($output, $csvHeader);
+            //月の日数ループ
+            $daysInMonth = Carbon::create($year, $month)->daysInMonth;
+            for ($day = 1; $day <= $daysInMonth; $day++) {
+                $dateStr = Carbon::create($year, $month, $day)->format('Y-m-d');
+                $attendance = $attendances->get($dateStr);
+
+                if ($attendance) {
+                    $row = [
+                        $dateStr,
+                        $attendance->clock_in_at,
+                        $attendance->clock_out_at,
+                        $restTotals->get($dateStr, 0),
+                        $attendance->attendance_total,
+                        $attendance->created_at->format('Y-m-d H:i:s'),
+                        $attendance->updated_at->format('Y-m-d H:i:s'),
+                    ];
+                } else {
+                    // 勤怠が存在しない日のため空データ
+                    $row = [
+                        $dateStr,
+                        '',
+                        '',
+                        $restTotals->get($dateStr, 0),
+                        '',
+                        '',
+                        ''
+                    ];
+                }
+                fputcsv($output, $row);
+            }
+            fclose($output);
+        }, 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="attendance.csv"',
+        ]);
+        return $response;
     }
 }
