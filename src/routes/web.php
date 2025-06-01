@@ -4,6 +4,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 /*
@@ -68,3 +69,21 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
     Route::post('/export', [AdminController::class, 'export']);
 });
 
+
+
+//表示
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/attendance');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/resend', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', '認証メールを再送しました。');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::get('/email/verify', [RegisterController::class, 'emailVerify']);

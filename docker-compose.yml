@@ -1,4 +1,7 @@
 version: '3.8'
+volumes:
+  db-volume:
+  maildir: {}
 
 services:
   nginx:
@@ -40,3 +43,15 @@ services:
       - mysql
     ports:
       - 8080:80
+
+  mail:
+    platform: linux/amd64
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /tmp
+    volumes:
+        - maildir:/tmp
