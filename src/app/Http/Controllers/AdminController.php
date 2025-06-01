@@ -270,7 +270,7 @@ class AdminController extends Controller
         }
         return redirect('/admin/stamp_correction_request/approve/'.$attendanceDate->id);
     }
-    //csvダウンロード ※必要なカラム：年月日、出勤、退勤、休憩時間トータル？、勤怠時間トータル
+    //csvダウンロード
     public function export(Request $request)
     {
         $date = Carbon::parse($request->date);
@@ -298,10 +298,8 @@ class AdminController extends Controller
             '作成日',
             '更新日'
         ];
-
         $response = new StreamedResponse(function () use ($attendances, $restTotals, $csvHeader, $year, $month) {
             $output = fopen('php://output', 'w');
-            // fwrite($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
             fputcsv($output, $csvHeader);
             //月の日数ループ
             $daysInMonth = Carbon::create($year, $month)->daysInMonth;
@@ -323,12 +321,12 @@ class AdminController extends Controller
                     // 勤怠が存在しない日のため空データ
                     $row = [
                         $dateStr,
-                        '',
-                        '',
+                        '00:00',
+                        '00:00',
                         $restTotals->get($dateStr, 0),
-                        '',
-                        '',
-                        ''
+                        '-',
+                        '-',
+                        '-'
                     ];
                 }
                 fputcsv($output, $row);

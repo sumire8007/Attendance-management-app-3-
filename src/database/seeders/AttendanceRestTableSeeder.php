@@ -14,7 +14,7 @@ class AttendanceRestTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i < 721; $i++) {
+        for ($i = 1; $i < 907; $i++) {
             AttendanceRest::create([
                 'attendance_id' => $i,
                 'rest_id' => $i,
