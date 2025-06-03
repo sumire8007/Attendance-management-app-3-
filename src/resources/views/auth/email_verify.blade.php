@@ -21,7 +21,7 @@
         </div>
         <form action="/email/resend" method="post">
             @csrf
-            <a class="resend-link" href="">認証メールを再送する</a>
+            <button class="resend-link">認証メールを再送する</button>
         </form>
     </div>
 </main>

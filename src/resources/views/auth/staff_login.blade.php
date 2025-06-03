@@ -58,8 +58,8 @@
                     <div class="form__button">
                         <button class="form__button-submit" type="submit">ログインする</button>
                     </div>
-                    <a class="transition" href="/register">会員登録はこちら</a>
                 </form>
+                    <a class="transition" href="/register">会員登録はこちら</a>
             </div>
 
     </main>

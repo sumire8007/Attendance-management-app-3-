@@ -35,6 +35,10 @@ img {
 .resend-link {
     display: inline-block;
     color: #0173CC;
+    font-size: 15px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 850px) {

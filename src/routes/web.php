@@ -35,7 +35,7 @@ Route::post('/logout', [LoginController::class, 'destroy']);
 Route::post('/admin/logout', [LoginController::class, 'destroy']);
 
 // ログイン後の画面表示(ユーザーのみ)
-Route::group(['middleware' => ['auth', 'can:user-higher']],function(){
+Route::group(['middleware' => ['auth', 'can:user-higher','verified']],function(){
     Route::get('/attendance', [StaffController::class, 'attendanceView']);
     Route::get('/attendance/list/{year?}/{month?}', [StaffController::class, 'attendanceListView']);
     Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
@@ -71,19 +71,21 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 
 
 
-//表示
+//メール認証画面の表示
 Route::get('/email/verify', function () {
-    return view('auth.verify-email');
+    return view('auth.email_verify');
 })->middleware('auth')->name('verification.notice');
 
+//
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
     return redirect('/attendance');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
+//メール再送
 Route::post('/email/resend', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
+    Auth::user()->sendEmailVerificationNotification();
     return back()->with('message', '認証メールを再送しました。');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('/email/verify', [RegisterController::class, 'emailVerify']);
+// Route::get('/email/verify', [RegisterController::class, 'emailVerify']);

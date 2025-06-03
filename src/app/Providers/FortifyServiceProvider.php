@@ -19,6 +19,8 @@ use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 
 
@@ -86,5 +88,22 @@ class FortifyServiceProvider extends ServiceProvider
             $email = (string) $request->email;
             return Limit::perMinute(10)->by($email . $request->ip());
         });
+
+
+        //会員登録した後のメール認証有無でリダイレクト先を変更
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::where('email', $request->email)->first();
+
+            if ($user && Hash::check($request->password, $user->password)) {
+                if (!$user->hasVerifiedEmail()) {
+                    return $user;
+                }
+            }
+            return null;
+        });
     }
 }
+
+// throw ValidationException::withMessages([
+//     'email' => ['メールアドレスが認証されていません。'],
+// ]);
