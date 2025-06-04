@@ -103,7 +103,3 @@ class FortifyServiceProvider extends ServiceProvider
         });
     }
 }
-
-// throw ValidationException::withMessages([
-//     'email' => ['メールアドレスが認証されていません。'],
-// ]);

@@ -63,11 +63,6 @@ class RegisterController extends Controller
         event(new Registered($user = $creator->create($request->all())));
 
         $this->guard->login($user);
-
         return app(RegisterResponse::class);
-    }
-    public function emailVerify()
-    {
-        return view('auth.email_verify');
     }
 }

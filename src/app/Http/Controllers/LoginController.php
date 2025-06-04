@@ -65,9 +65,6 @@ class LoginController extends Controller
         if (!Auth::attempt($creadentials)) {
             return back()->withErrors(["email" => "ログイン情報が登録されていません"])->withInput();
         }
-        // return $this->loginPipeline($request)->then(function ($request) {
-        //     return app(LoginResponse::class);
-        // });
         $request->session()->regenerate();
 
         return app(LoginResponse::class);

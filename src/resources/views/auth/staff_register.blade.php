@@ -91,8 +91,8 @@
                     <div class="form__button">
                         <button class="form__button-submit" type="submit">登録する</button>
                     </div>
-                    <a class="transition" href="/login">ログインはこちら</a>
                 </form>
+                    <a class="transition" href="/login">ログインはこちら</a>
             </div>
 
     </main>

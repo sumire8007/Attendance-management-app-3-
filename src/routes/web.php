@@ -87,5 +87,3 @@ Route::post('/email/resend', function (Request $request) {
     Auth::user()->sendEmailVerificationNotification();
     return back()->with('message', '認証メールを再送しました。');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
-// Route::get('/email/verify', [RegisterController::class, 'emailVerify']);
