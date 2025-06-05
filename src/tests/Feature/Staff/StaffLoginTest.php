@@ -23,6 +23,7 @@ class StaffLoginTest extends TestCase
             'name' => 'テスト太郎',
             'email' => 'test123@example.com',
             'password' => bcrypt('password123'),
+            'email_verified_at' => '2025-05-01 09:00:00',
         ]);
     }
 

@@ -29,7 +29,7 @@ class AttendanceDetailTest extends TestCase
             'name' => 'テスト太郎',
             'email' => 'test123@example.com',
             'password' => bcrypt('password123'),
-
+            'email_verified_at' => '2025-05-01 09:00:00',
         ]);
         Carbon::setTestNow(Carbon::create(2025, 5, 1, 12, 00, 0));
         $this->attendance = Attendance::create([

@@ -85,6 +85,7 @@ class RegisterTest extends TestCase
             'email' => 'test123@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
+            'email_verified_at' => '2025-05-01 09:00:00',
         ]);
         $this->assertDatabaseHas('users', [
             'name' => 'テスト太郎',
