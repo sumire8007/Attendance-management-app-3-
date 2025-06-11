@@ -25,6 +25,8 @@ cp .env.example .env
 ```
 【.envファイル 変更箇所】
 ```
+   DB_CONNECTION=mysql
+
    DB_HOST=mysql
    
    DB_PORT=3306
@@ -129,23 +131,32 @@ php artisan db:seed
 
 • MySQL 8.0.26
 
+
 ## URL
 
-・開発環境：http://localhost/login
+・開発環境 ： http://localhost/login
 
 ・ phpMyAdmin : http://localhost:8080/
 
-・管理者ログイン: http://localhost/admin/login
+・ MailHog : http://localhost:8025
+
+## テストアカウント
+
+### ◽️管理者ログイン: http://localhost/admin/login
 
    > email: admin@example.com
    > 
    > password: password123
 
-・スタッフログイン: http://localhost/login
+### ◽️スタッフログイン: http://localhost/login
 
-・ユーザー登録　: http://localhost/register
+   > email: reina.n@coachtech.com
+   > 
+   > password: password123
+
+### ◽️ユーザー登録　: http://localhost/register
 
 
-**ER図**
+## ER図
 
 <img width="326" alt="スクリーンショット 2025-05-27 23 50 55" src="https://github.com/user-attachments/assets/95e4004d-8cc4-4da3-9d3b-803d7be97e4a" />
