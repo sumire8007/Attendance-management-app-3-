@@ -3,7 +3,7 @@
 **◽️Dockerビルド**
 
 ```
-git clone git@github.com:sumire8007/Attendance-management-app.git
+git clone git@github.com:sumire8007/Attendance-management-app-2-.git
 ```
 ```
 docker-compose up -d --build
