@@ -3,7 +3,7 @@
 **◽️Dockerビルド**
 
 ```
-git clone git@github.com:sumire8007/Attendance-management-app-2-.git
+git clone git@github.com:sumire8007/Attendance-management-app-3-.git
 ```
 ```
 docker-compose up -d --build
@@ -59,8 +59,8 @@ cp .env.example .env
    ```
   
 4. 権限を反映
-```
-　  FLUSH PRIVILEGES;
+   ```
+   FLUSH PRIVILEGES;
    ```
   
 5. MySQLコンテナから抜ける
@@ -75,7 +75,10 @@ php artisan migrate
 ```
 php artisan db:seed
 ```
-
+※((もし立ち上げ後、ログイン画面などを表示する際、パーミッションエラーが出た場合は下記コマンドを入力してください。))
+```
+chmod -R 777 storage bootstrap/cache
+```
 
 ## PHPUnitテストの実行
 1. MySQLコンテナにアクセス後、MySQLにログイン ※パスワードは、docker-compose.ymlに記載
@@ -88,14 +91,37 @@ php artisan db:seed
    CREATE DATABASE demo_test;
    SHOW DATABASES;
    ```
-   ※データベース(demo_test)が作成されていることが確認出来たら、MySQLコンテナから抜けてください。
+ ※データベース(demo_test)が作成されていることが確認出来ればOK。
+ 
+**◽️MySQL、laravel_userに権限を与えるために下記を実行**
+1. MySQLコンテナにアクセス
+   ```
+   docker-compose exec mysql bash
+   ```
+2. MySQLにログイン　　※パスワードは、docker-compose.ymlに記載
+   ```
+   mysql -u root -p
+   ```           
+5. ユーザーに権限を付与
+   ```
+   GRANT ALL PRIVILEGES ON demo_test.* TO 'root'@'%';
+   ```
+  
+4. 権限を反映
+   ```
+   FLUSH PRIVILEGES;
+   ```
+
+6. MySQLコンテナから抜ける
    ```exit;```
+
    
-3. テスト用の.envファイル作成
+2. テスト用の.envファイル作成
    ```
    docker-compose exec php bash
    cp .env .env.testing
    ```
+  
 4. .env.testingの環境変数を変更
    ```
     APP_ENV=test
@@ -141,7 +167,9 @@ php artisan db:seed
 ・ MailHog : http://localhost:8025
 
 ## テストアカウント
-
+-----------------------------------------------------------------------------------------------
+#### ※管理者 及び スタッフの機能を確認して頂く際は、一度ログアウトしてから各々にログインして頂きますようお願いします。
+-----------------------------------------------------------------------------------------------
 ### ◽️管理者ログイン: http://localhost/admin/login
 
    > email: admin@example.com
