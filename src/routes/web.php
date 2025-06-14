@@ -40,7 +40,7 @@ Route::group(['middleware' => ['auth', 'can:user-higher','verified']],function()
     Route::get('/attendance/list/{year?}/{month?}', [StaffController::class, 'attendanceListView']);
     Route::get('/stamp_correction_request/list', [StaffController::class, 'requestListView']);
     Route::get('/stamp_correction_request/list/approval',[StaffController::class,'requestListView']);
-    Route::get('/attendance/{attendaceId?}/{applicationId?}', [StaffController::class, 'attendanceDetail']);
+    Route::get('/attendance/{attendanceId?}/{applicationId?}', [StaffController::class, 'attendanceDetail']);
     //出退勤・休憩機能
     Route::post('/attendance/clockin', [StaffController::class, 'AddClockIn']);
     Route::post('/attendance/clockout', [StaffController::class, 'AddClockOut']);
