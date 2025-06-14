@@ -176,4 +176,4 @@ chmod -R 777 storage bootstrap/cache
 
 ## ER図
 
-<img width="326" alt="ER図" src="" />
+<img width="326" alt="ER図" src="src/public/img/ER_Attendance-app.png" />
