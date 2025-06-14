@@ -17,7 +17,7 @@
             @elseif(isset($rest->rest_in_at) && empty($rest->rest_out_at))
                 <div class="attendance_status">休憩中</div>
             @elseif(isset($attendance->clock_out_at))
-                <div class="attendance_status">退勤済み</div>
+                <div class="attendance_status">退勤済</div>
             @endif
 
             <div class="attendance_day"> {{ $date->translatedFormat('Y年n月j日(D)') }}</div>
