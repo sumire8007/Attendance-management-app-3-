@@ -84,7 +84,7 @@ class AdminLoginTest extends TestCase
     public function testLogout()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin@example.com',
+            'email' => 'admin123@example.com',
             'password' => 'password123',
         ]);
         $response = $this->post('/logout');

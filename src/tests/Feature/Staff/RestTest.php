@@ -64,13 +64,8 @@ class RestTest extends TestCase
         ]);
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
-        Rest::create([
-            'user_id' => $this->user->id,
-            'rest_date' => '2025-05-01',
-            'rest_in_at' => '12:00:00',
-            'rest_out_at' => '13:00:00',
-            'rest_total' => 60,
-        ]);
+        $response = $this->post('/attendance/restin');
+        $response = $this->post('/attendance/restout');
         $response = $this->get('/attendance');
         $response->assertSee('休憩入');
     }
@@ -88,11 +83,7 @@ class RestTest extends TestCase
         ]);
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
-        $rest = Rest::create([
-            'user_id' => $this->user->id,
-            'rest_date' => '2025-05-01',
-            'rest_in_at' => '12:00:00',
-        ]);
+        $response = $this->post('/attendance/restin');
         $response = $this->get('/attendance');
         $response->assertSee('休憩戻');
         $response = $this->post('/attendance/restout');
@@ -113,13 +104,8 @@ class RestTest extends TestCase
         ]);
         $response->assertRedirect('/attendance');
         $response = $this->get('/attendance');
-        Rest::create([
-            'user_id' => $this->user->id,
-            'rest_date' => '2025-05-01',
-            'rest_in_at' => '12:00:00',
-            'rest_out_at' => '13:00:00',
-            'rest_total' => 60,
-        ]);
+        $response = $this->post('/attendance/restin');
+        $response = $this->post('/attendance/restout');
         $response = $this->get('/attendance');
         $response->assertSee('休憩入');
         $response = $this->post('/attendance/restin');

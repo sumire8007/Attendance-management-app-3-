@@ -59,7 +59,6 @@ class StaffLoginTest extends TestCase
         $response = $this->get('/login');
         $response->assertSee('ログイン情報が登録されていません');
 
-
         // もしメールアドレスが間違っていた場合
         $response = $this->post('login', [
             'email' => 'test@example.com',

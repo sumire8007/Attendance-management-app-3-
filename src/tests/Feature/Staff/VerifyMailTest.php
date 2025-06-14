@@ -56,9 +56,20 @@ class VerifyMailTest extends TestCase
         $this->get('http://localhost:8025/');
         $response->assertStatus(200);
     }
-    //メール認証サイトのメール認証を完了すると、勤怠画面に遷移する
-    // public function testVerifiedEmail()
-    // {
-
-    // }
+    //メール認証を完了すると、勤怠画面に遷移する
+    public function testVerifiedEmail()
+    {
+        $response = $this->post('/register', [
+            'name' => 'テスト太郎',
+            'email' => 'test123@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+        User::where('email', 'test123@example.com')
+            ->update( ['email_verified_at'=>'2025-05-01 09:00:00']);
+        $user = User::where('email', 'test123@example.com')->first();
+        $response = $this->actingAs($user)->get('/attendance');
+        $response->assertStatus(200);
+        $response->assertSee('出勤');
+    }
 }

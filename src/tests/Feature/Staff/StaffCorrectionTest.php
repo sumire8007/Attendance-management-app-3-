@@ -5,17 +5,12 @@ namespace Tests\Feature\Staff;
 use App\Models\AttendanceApplication;
 use App\Models\AttendanceRestApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Symfony\Component\CssSelector\Node\FunctionNode;
 use Tests\TestCase;
 use App\Models\Attendance;
 use App\Models\User;
 use App\Models\Rest;
 use App\Models\AttendanceRest;
 use Database\Seeders\UsersTableSeeder;
-use Database\Seeders\AttendanceTableSeeder;
-use Database\Seeders\AttendanceRestTableSeeder;
-use Database\Seeders\RestTableSeeder;
 use Carbon\Carbon;
 
 
