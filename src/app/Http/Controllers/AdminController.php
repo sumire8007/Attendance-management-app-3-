@@ -130,15 +130,13 @@ class AdminController extends Controller
         $prevMonth = $date->copy()->subMonth();
         $nextMonth = $date->copy()->addMonth();
 
-        // 指定月の開始日と終了日を取得
         $startOfMonth = $date->copy()->startOfMonth();
         $endOfMonth = $date->copy()->endOfMonth();
-        // 月の日付を1日ずつリストに入れる　　$dates = collect();は$dateの中は配列になるような箱を用意
         $dates = collect();
         foreach ($startOfMonth->toPeriod($endOfMonth) as $day) {
             $dates->push($day->copy());
         }
-        // ログインしているユーザーの勤怠データのうち、パラメーターで指定された年月の1日〜30日までを$attendancesに格納
+
         $attendances = Attendance::where('user_id', $userId)
             ->whereBetween('attendance_date', [$startOfMonth, $endOfMonth])
             ->get()
@@ -152,12 +150,10 @@ class AdminController extends Controller
             return $restsForDay->sum('rest_total');
         });
 
-        // 日付ごとにデータを整形　map()はlaravel collectionの繰り返しメソッド
         $attendanceDate = $dates->map(function ($day) use ($attendances, $restTotals) {
-            // $attendancesの中からその日の日付を探す、無ければエラーを返すのではなくnullを格納
             $record = $attendances[$day->format('Y-m-d')] ?? null;
             $dateKey = $day->format('Y-m-d');
-            // $record中がnull,その日のデータが無いときnull,あったらその日のデータ（clock_in_at,clock_out_atを格納）
+
             $in = $record && $record->clock_in_at ? Carbon::parse($record->clock_in_at)->format('H:i') : null;
             $out = $record && $record->clock_out_at ? Carbon::parse($record->clock_out_at)->format('H:i') : null;
             $restMinutes = $restTotals[$dateKey] ?? 0;
@@ -178,10 +174,10 @@ class AdminController extends Controller
         return view('admin.admin_staff_attendance_list', [
             'user' => $user,
             'date' => $date,
-            'attendanceDates' => $attendanceDate,  //表示用の勤怠情報（日別）
-            'currentDate' => $date,  //今表示している月
-            'prevMonth' => $date->copy()->subMonth(), //今表示している月の1ヶ月前
-            'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
+            'attendanceDates' => $attendanceDate,
+            'currentDate' => $date,
+            'prevMonth' => $date->copy()->subMonth(),
+            'nextMonth' => $date->copy()->addMonth(),
         ]);
     }
     //申請一覧表示

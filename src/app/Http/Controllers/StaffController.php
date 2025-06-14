@@ -35,17 +35,13 @@ class StaffController extends Controller
     //勤怠リストの表示
     public function attendanceListView($year = null, $month = null){
         $userId = Auth::user()->id;
-        // パラメーターのyearがあったらそれを使う、無ければnow　※monthも同じく　例）$date = 2025-05-01
         $date = Carbon::createFromDate($year ?? now()->year, $month ?? now()->month, 1);
-        // 指定月の開始日と終了日を取得
         $startOfMonth = $date->copy()->startOfMonth();
         $endOfMonth = $date->copy()->endOfMonth();
-        // 月の日付を1日ずつリストに入れる　　$dates = collect();は$dateの中は配列になるような箱を用意
         $dates = collect();
         foreach($startOfMonth->toPeriod($endOfMonth) as $day){
             $dates->push($day->copy());
         }
-        // ログインしているユーザーの勤怠データのうち、パラメーターで指定された年月の1日〜30日までを$attendancesに格納
         $attendances = Attendance::where('user_id', $userId)
         ->whereBetween('attendance_date', [$startOfMonth, $endOfMonth])
         ->get()
@@ -59,12 +55,9 @@ class StaffController extends Controller
             return $restsForDay->sum('rest_total');
         });
 
-        // 日付ごとにデータを整形　map()はlaravel collectionの繰り返しメソッド
         $attendanceDate = $dates->map(function($day) use ($attendances, $restTotals) {
-            // $attendancesの中からその日の日付を探す、無ければエラーを返すのではなくnullを格納
             $record = $attendances[$day->format('Y-m-d')] ?? null;
             $dateKey = $day->format('Y-m-d');
-            // $record中がnull,その日のデータが無いときnull,あったらその日のデータ（clock_in_at,clock_out_atを格納）
             $in = $record && $record->clock_in_at ? Carbon::parse($record->clock_in_at)->format('H:i') : null;
             $out = $record && $record->clock_out_at ? Carbon::parse($record->clock_out_at)->format('H:i') : null;
             $restMinutes = $restTotals[$dateKey] ?? 0;
@@ -83,10 +76,10 @@ class StaffController extends Controller
             ];
         });
         return view('staff.attendance_list',[
-            'attendanceDate' => $attendanceDate,  //表示用の勤怠情報（日別）
-            'currentDate' => $date,  //今表示している月
-            'prevMonth' => $date->copy()->subMonth(), //今表示している月の1ヶ月前
-            'nextMonth' => $date->copy()->addMonth(),//今表示している月の1ヶ月後
+            'attendanceDate' => $attendanceDate,
+            'currentDate' => $date,
+            'prevMonth' => $date->copy()->subMonth(),
+            'nextMonth' => $date->copy()->addMonth(),
         ]);
     }
     //勤怠詳細表示
@@ -102,7 +95,7 @@ class StaffController extends Controller
             ->get();
         $approval = null;
         $waitApproval = null;
-    //承認待ちのデータがあるのか($waitApproval)、全て承認済みか($approval)
+        //承認待ちのデータがあるのか($waitApproval)、全て承認済みか($approval)
         $attendanceApplicationDates = AttendanceApplication::where('attendance_id', $attendanceId)->get();
         foreach ($attendanceApplicationDates as $attendanceApplicationDate) {
             $waitApproval = AttendanceRestApplication::where('attendance_application_id', $attendanceApplicationDate->id)
@@ -125,7 +118,7 @@ class StaffController extends Controller
             return view('staff.attendance_detail', compact('attendanceId','applicationId','attendanceDates', 'date', 'in', 'out', 'restDates', 'waitApproval', 'approval', 'attendanceApplicationDate', 'restApplicationDates'));
         }
         if ($applicationId) {
-            //1回以上申請したことがあり、再申請が可能)
+            //1回以上申請したことがあり、再申請が可能
             if (!empty($approval)) {
                 $attendanceApplicationDate = AttendanceRestApplication::where('id', $applicationId)
                     ->with('attendanceApplication', 'user')
@@ -247,7 +240,7 @@ class StaffController extends Controller
             'rest_date' => $date->format('Y-m-d'),
             'rest_in_at' => $date->format('H:i:s'),
         ]);
-        // 中間テーブルにも保存しておく
+        // 中間テーブルに保存
         AttendanceRest::create([
             'attendance_id' => $attendance->id,
             'rest_id' => $rest->id,
