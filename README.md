@@ -66,7 +66,7 @@ DB_PASSWORD=laravel_pass
 php artisan migrate
 ```
 
-**◽️ダミーデータの作成**
+**◽️ダミーデータの作成(勤怠は2025年1月〜5月分までのデータが作られます)**
 ```
 php artisan db:seed
 ```
