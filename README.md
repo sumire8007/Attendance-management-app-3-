@@ -25,17 +25,12 @@ cp .env.example .env
 ```
 【.envファイル 変更箇所】
 ```
-   DB_CONNECTION=mysql
-
-   DB_HOST=mysql
-   
-   DB_PORT=3306
-   
-   DB_DATABASE=laravel_db
-   
-   DB_USERNAME=laravel_user
-   
-   DB_PASSWORD=laravel_pass
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
    ```
 4.　KEYを与える
   ```
@@ -44,7 +39,7 @@ cp .env.example .env
 5.　PHPコンテナから抜ける
    ```exit```
 
-**◽️MySQL、laravel_userに権限を与えるために下記を実行**
+**◽️MySQL、laravel_dbでの権限を与えるために下記を実行**
 1. MySQLコンテナにアクセス
    ```
    docker-compose exec mysql bash
@@ -91,59 +86,52 @@ chmod -R 777 storage bootstrap/cache
    CREATE DATABASE demo_test;
    SHOW DATABASES;
    ```
- ※データベース(demo_test)が作成されていることが確認出来ればOK。
+    ※データベース(demo_test)が作成されていることが確認出来ればOK。
  
-**◽️MySQL、laravel_userに権限を与えるために下記を実行**
-1. MySQLコンテナにアクセス
-   ```
-   docker-compose exec mysql bash
-   ```
-2. MySQLにログイン　　※パスワードは、docker-compose.ymlに記載
-   ```
-   mysql -u root -p
-   ```           
-5. ユーザーに権限を付与
-   ```
-   GRANT ALL PRIVILEGES ON demo_test.* TO 'root'@'%';
-   ```
+3. demo_testでの権限を与えるために下記を実行
+       
+    ユーザーに権限を付与
+      ```
+      GRANT ALL PRIVILEGES ON demo_test.* TO 'root'@'%';
+      ```
   
 4. 権限を反映
    ```
    FLUSH PRIVILEGES;
    ```
 
-6. MySQLコンテナから抜ける
+5. MySQLコンテナから抜ける
    ```exit;```
 
    
-2. テスト用の.envファイル作成
+6. テスト用の.envファイル作成
    ```
    docker-compose exec php bash
    cp .env .env.testing
    ```
   
-4. .env.testingの環境変数を変更
+7. .env.testingの環境変数を変更
    ```
-    APP_ENV=test
-    APP_KEY=
+   APP_ENV=test
+   APP_KEY=
 
-    DB_DATABASE=demo_test
-    DB_USERNAME=root
-    DB_PASSWORD=root
+   DB_DATABASE=demo_test
+   DB_USERNAME=root
+   DB_PASSWORD=root
    ```
-5. KEYを与える
+8. KEYを与える
    ```
    php artisan key:generate --env=testing
    ```
-6. キャッシュの削除
+9. キャッシュの削除
    ```
    php artisan config:clear
    ```
-7. テスト用のテーブル作成
+10. テスト用のテーブル作成
    ```
    php artisan migrate --env=testing
    ```
-8. テストの実行
+11. テストの実行
   ```
    vendor/bin/phpunit --testdox
   ```
