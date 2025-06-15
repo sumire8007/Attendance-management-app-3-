@@ -83,7 +83,7 @@ class ApprovalTest extends TestCase
     public function testWaitApprovalAll()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/stamp_correction_request/list');
@@ -106,7 +106,7 @@ class ApprovalTest extends TestCase
         AttendanceRestApplication::whereNull('approval_at')->update(['approval_at' => '2025-05-02 12:00:00']);
         //ログインして確認
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/stamp_correction_request/list/approval');
@@ -128,7 +128,7 @@ class ApprovalTest extends TestCase
     public function testWaitApprovalDetail()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $waitDate = AttendanceRestApplication::where('user_id', $this->testUser->id)
@@ -147,7 +147,7 @@ class ApprovalTest extends TestCase
     public function testApprovalProcess()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $waitDate = AttendanceRestApplication::where('user_id', $this->testUser->id)

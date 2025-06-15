@@ -57,7 +57,7 @@ class AdminCorrectionTest extends TestCase
     public function testDetailTransition()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
 
@@ -71,7 +71,7 @@ class AdminCorrectionTest extends TestCase
     public function testAdminAttendanceError()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $this->attendance->id);
@@ -92,7 +92,7 @@ class AdminCorrectionTest extends TestCase
     public function testAdminRestInError()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $this->attendance->id);
@@ -113,7 +113,7 @@ class AdminCorrectionTest extends TestCase
     public function testAdminRestOutError()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $this->attendance->id);
@@ -134,7 +134,7 @@ class AdminCorrectionTest extends TestCase
     public function testAdminRemarkError()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/' . $this->attendance->id);

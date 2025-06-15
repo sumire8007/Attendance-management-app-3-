@@ -22,7 +22,7 @@ class AdminLoginTest extends TestCase
         parent::setUp();
         $this->admin = User::factory()->create([
             'name' => '管理者',
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => bcrypt('password123'),
             'role' => 1,
         ]);
@@ -43,7 +43,7 @@ class AdminLoginTest extends TestCase
     public function testPasswordNone()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => '',
         ]);
         $response = $this->get('/admin/login');
@@ -54,7 +54,7 @@ class AdminLoginTest extends TestCase
     {
         // もしパスワードが間違っていた場合
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password456'
         ]);
         $response = $this->get('/admin/login');
@@ -74,7 +74,7 @@ class AdminLoginTest extends TestCase
     public function testLogin()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $this->assertAuthenticatedAs($this->admin);
@@ -84,7 +84,7 @@ class AdminLoginTest extends TestCase
     public function testLogout()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->post('/logout');

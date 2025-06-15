@@ -135,6 +135,6 @@ class RestTest extends TestCase
         ]);
         $response = $this->get('/attendance/list/2025/5');
         $response->assertSee('05/01(木)');
-        $response->assertSee('1:00');
+        $response->assertSee('01:00');
     }
 }

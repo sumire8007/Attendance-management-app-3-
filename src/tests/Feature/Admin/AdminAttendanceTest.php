@@ -62,7 +62,7 @@ class AdminAttendanceTest extends TestCase
             'rest_id' => $rest->id,
         ]);
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/list/2025/5/1');
@@ -85,7 +85,7 @@ class AdminAttendanceTest extends TestCase
     public function testNowDate()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/list');
@@ -96,7 +96,7 @@ class AdminAttendanceTest extends TestCase
     public function testPrevDay()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/list');
@@ -111,7 +111,7 @@ class AdminAttendanceTest extends TestCase
     public function testNextDay()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/list');

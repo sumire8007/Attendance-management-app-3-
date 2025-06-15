@@ -60,7 +60,7 @@ class AdminAttendanceListTest extends TestCase
     public function testStaffList()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/staff/list');
@@ -73,7 +73,7 @@ class AdminAttendanceListTest extends TestCase
     public function testStaffAttendance()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/staff/'.$this->user->id);
@@ -86,7 +86,7 @@ class AdminAttendanceListTest extends TestCase
     public function testPrevMonth()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/staff/' . $this->user->id);
@@ -101,7 +101,7 @@ class AdminAttendanceListTest extends TestCase
     public function testNextMonth()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/staff/' . $this->user->id);
@@ -116,7 +116,7 @@ class AdminAttendanceListTest extends TestCase
     public function testAttendanceTransition()
     {
         $response = $this->post('admin/login', [
-            'email' => 'admin123@example.com',
+            'email' => 'admin@example.com',
             'password' => 'password123',
         ]);
         $response = $this->actingAs($this->admin)->get('/admin/attendance/list');
